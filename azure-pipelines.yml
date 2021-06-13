@@ -38,6 +38,9 @@ stages:
     - script: |
         npm install
         npm run build --if-present
+        npm run postinstall
+        npm run env
+        npm audit fix
       displayName: 'npm install and build'
       
     - task: ArchiveFiles@2
