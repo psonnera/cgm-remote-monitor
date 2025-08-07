@@ -91,6 +91,7 @@ A new section in Admin Tools allows you to monitor LLM usage:
 
 1.  **Navigate to Reports:** Go to the "Reports" section of your Nightscout site.
 2.  **Load Report Data:** Select any standard report type (e.g., "Day to day," "Daily Stats"), choose your desired date range and other relevant filters, and click the main "Show" button for the reports. This action loads the data that will be available for the AI evaluation.
+    *   **Important:** The AI Evaluation is limited to a maximum of **14 days**. If you select a longer period, the "Send to AI" button will be disabled, and a message will prompt you to reduce the date range. This is to ensure good performance and manage LLM usage costs.
 3.  **Open AI Evaluation Tab:** In the list of report tabs, click on "AI Evaluation".
     *   Upon opening the tab, the plugin will automatically check for all required configurations (API URL, Model, System Prompt, User Prompt Template).
     *   If any settings are missing, a detailed error message will be displayed, guiding you on where to configure each item.
