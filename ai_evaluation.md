@@ -77,12 +77,15 @@ A new section in Admin Tools allows you to monitor LLM usage:
 
 1.  Navigate to **Admin Tools** in your Nightscout site.
 2.  Locate the section titled **"AI Usage Statistics"**.
-3.  This section displays a table with:
-    *   **Month (YYYY-MM):** The calendar month of usage.
-    *   **Total Tokens Consumed:** The sum of tokens used in that month (according to the LLM API response).
-    *   **Total API Calls:** The number of successful calls to the LLM in that month.
-    *   **Last Updated (UTC):** The timestamp of the most recent usage record for that month.
-4.  This data helps monitor the volume of LLM interactions. Cost estimation is not directly provided in this view but can be inferred from token counts if you know your LLM provider's pricing.
+3.  This section displays a table with a monthly breakdown and a total summary of your AI usage. The columns include:
+    *   **Month:** The calendar month of usage.
+    *   **Requests:** The total number of AI evaluation requests made.
+    *   **Total Days:** The total number of unique days analyzed across all requests.
+    *   **Avg Days/Req:** The average number of days analyzed per request.
+    *   **Total Tokens:** The sum of all tokens used (for both interim and final calls).
+    *   **Avg Tokens/Req:** The average number of tokens used per request.
+    *   **Avg Tokens/Day:** The average number of tokens used per day analyzed.
+4.  This data helps monitor the volume of LLM interactions and understand usage patterns.
 
 ### 2. Generating an AI Evaluation
 
@@ -229,17 +232,14 @@ A new section in Admin Tools allows you to monitor LLM usage:
         *   `updated_at` (Date)
     *   `upsert: true` is used for creation/update.
 *   **`ai_usage_stats` collection:** (New)
-    *   Stores monthly AI token usage statistics.
-    *   Documents use `_id` format: `"YYYY-MM"` (e.g., `"2023-10"`).
+    *   Stores a record for each complete AI evaluation request.
     *   Each document contains:
-        *   `total_tokens_month` (Number): Total tokens consumed in that month.
-        *   `api_calls_month` (Number): Total successful API calls to LLM in that month.
-        *   `daily_usage_array` (Array): Array of objects, each representing a day:
-            *   `date` (String): Date string like `"YYYY-MM-DD"`.
-            *   `total_tokens_day` (Number): Tokens consumed on this specific day.
-            *   `api_calls_day` (Number): API calls made on this specific day.
-        *   `last_updated` (Date): Timestamp of the last update to this monthly record.
-    *   `upsert: true` is used for creation/update.
+        *   `createdAt` (Date): The timestamp when the record was created.
+        *   `date_from` (String): The start date of the evaluation period.
+        *   `date_till` (String): The end date of the evaluation period.
+        *   `days_requested` (Number): The number of days analyzed in the request.
+        *   `total_tokens_used` (Number): The total tokens consumed for the entire request (interim + final).
+        *   `total_api_calls` (Number): The total number of API calls for the request (interim + final).
 
 
 ### 3. API Endpoints
@@ -259,12 +259,12 @@ A new section in Admin Tools allows you to monitor LLM usage:
         *   **Functionality:** Saves the provided prompts to the database.
 *   **AI Usage Tracking:**
     *   `POST /api/v1/ai_usage/record`
-        *   **Request Body:** `{ tokens_used: Number }`
-        *   **Authorization:** Currently uses `api:treatments:create` (placeholder, ideally a more specific permission like `api:ai_usage:record` or system-level access if only called internally).
-        *   **Functionality:** Records the number of tokens used for an AI evaluation. Updates monthly and daily aggregates in the `ai_usage_stats` collection. Called by `/api/v1/ai_eval` internally.
+        *   **Request Body:** `{ date_from: String, date_till: String, days_requested: Number, total_tokens_used: Number, total_api_calls: Number }`
+        *   **Authorization:** Requires `api:treatments:create`.
+        *   **Functionality:** Records a new entry for a completed AI evaluation request. Called by the client after the final AI response is received.
     *   `GET /api/v1/ai_usage/monthly_summary`
-        *   **Authorization:** Currently uses `api:treatments:read` (placeholder, ideally `api:ai_usage:read` or admin-level).
-        *   **Functionality:** Returns all documents from the `ai_usage_stats` collection, providing a summary of token usage per month.
+        *   **Authorization:** Requires `api:treatments:read`.
+        *   **Functionality:** Returns an object containing aggregated statistics, with a breakdown by month and a grand total.
 
 ### 4. Data Flow for AI Evaluation
 
@@ -329,6 +329,7 @@ This markdown file should provide a comprehensive overview for both users and de
 Please let me know if you'd like any sections expanded or clarified!
 
 
-Reverted Commits:
+# Reverted Commits:
+
 https://github.com/xannasavin/cgm-remote-monitor/commit/74d55b2b0b8e7545e218c6e21bb64e061f29b5dc
 https://github.com/xannasavin/cgm-remote-monitor/commit/d1a8cca9eb80d86afec2f51c56166fae06817258
