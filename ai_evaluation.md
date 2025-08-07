@@ -73,19 +73,28 @@ For more flexible and persistent prompt management:
 
 #### c. Viewing AI Usage Statistics (Admin Tools)
 
-A new section in Admin Tools allows you to monitor LLM usage:
+A new section in Admin Tools allows you to monitor LLM usage in detail:
 
 1.  Navigate to **Admin Tools** in your Nightscout site.
 2.  Locate the section titled **"AI Usage Statistics"**.
-3.  This section displays a table with a monthly breakdown and a total summary of your AI usage. The columns include:
+3.  This section displays a table with a monthly breakdown and a total summary of your AI usage. The columns provide a detailed view of token consumption:
     *   **Month:** The calendar month of usage.
     *   **Requests:** The total number of AI evaluation requests made.
     *   **Total Days:** The total number of unique days analyzed across all requests.
     *   **Avg Days/Req:** The average number of days analyzed per request.
-    *   **Total Tokens:** The sum of all tokens used (for both interim and final calls).
-    *   **Avg Tokens/Req:** The average number of tokens used per request.
-    *   **Avg Tokens/Day:** The average number of tokens used per day analyzed.
-4.  This data helps monitor the volume of LLM interactions and understand usage patterns.
+    *   **Total Tokens:** This is a grouped column with three sub-columns:
+        *   **Input:** The total number of prompt tokens sent to the LLM.
+        *   **Output:** The total number of completion tokens received from the LLM.
+        *   **Total:** The sum of input and output tokens.
+    *   **Avg Tokens/Req:** This is a grouped column showing the average tokens used per request, broken down into:
+        *   **Input:** Average prompt tokens per request.
+        *   **Output:** Average completion tokens per request.
+        *   **Total:** Average total tokens per request.
+    *   **Avg Tokens/Day:** This is a grouped column showing the average tokens used per day analyzed, broken down into:
+        *   **Input:** Average prompt tokens per day.
+        *   **Output:** Average completion tokens per day.
+        *   **Total:** Average total tokens per day.
+4.  This detailed data helps monitor the cost and efficiency of LLM interactions.
 
 ### 2. Generating an AI Evaluation
 
@@ -188,6 +197,8 @@ A new section in Admin Tools allows you to monitor LLM usage:
     *   `interim_call_tokens`: The total tokens used by the interim calls.
     *   `interim_calls_amount`: The number of interim calls made.
     *   `total_tokens_used`: The total tokens used by all calls (interim and final).
+    *   `prompt_tokens_used`: The total prompt tokens used for the entire session.
+    *   `completion_tokens_used`: The total completion tokens used for the entire session.
     *   `date_from`: The start date of the evaluation period.
     *   `date_till`: The end date of the evaluation period.
     *   `final_response`: The response from the final AI call.
@@ -240,6 +251,8 @@ A new section in Admin Tools allows you to monitor LLM usage:
         *   `date_from` (String): The start date of the evaluation period.
         *   `date_till` (String): The end date of the evaluation period.
         *   `days_requested` (Number): The number of days analyzed in the request.
+        *   `prompt_tokens_used` (Number): The total prompt (input) tokens for the session.
+        *   `completion_tokens_used` (Number): The total completion (output) tokens for the session.
         *   `total_tokens_used` (Number): The total tokens consumed for the entire request (interim + final).
         *   `total_api_calls` (Number): The total number of API calls for the request (interim + final).
 
@@ -261,12 +274,12 @@ A new section in Admin Tools allows you to monitor LLM usage:
         *   **Functionality:** Saves the provided prompts to the database.
 *   **AI Usage Tracking:**
     *   `POST /api/v1/ai_usage/record`
-        *   **Request Body:** `{ date_from: String, date_till: String, days_requested: Number, total_tokens_used: Number, total_api_calls: Number }`
-        *   **Authorization:** Requires `api:treatments:create`.
+        *   **Request Body:** `{ date_from: String, date_till: String, days_requested: Number, prompt_tokens_used: Number, completion_tokens_used: Number, total_tokens_used: Number, total_api_calls: Number }`
+        *   **Authorization:** Requires `api:treatments:read`.
         *   **Functionality:** Records a new entry for a completed AI evaluation request. Called by the client after the final AI response is received.
     *   `GET /api/v1/ai_usage/monthly_summary`
         *   **Authorization:** Requires `api:treatments:read`.
-        *   **Functionality:** Returns an object containing aggregated statistics, with a breakdown by month and a grand total.
+        *   **Functionality:** Returns an object containing aggregated statistics, with a breakdown by month and a grand total. The data includes detailed sums and averages for prompt, completion, and total tokens.
 
 ### 4. Data Flow for AI Evaluation
 
