@@ -198,8 +198,9 @@ A new section in Admin Tools allows you to monitor LLM usage:
     *   Fetches current prompts from `/api/v1/ai_settings/prompts` (GET).
     *   Saves prompts via `/api/v1/ai_settings/prompts` (POST).
 *   **`lib/admin_plugins/ai_usage_viewer.js`:** (New)
-    *   Admin plugin to display monthly AI token usage statistics.
-    *   Fetches data from `/api/v1/ai_usage/monthly_summary`.
+    *   Admin plugin to display detailed AI token usage statistics.
+    *   Fetches data from `/api/v1/ai_usage/monthly_summary` on initial load (`init` function) and when the "Refresh Data" button is clicked (`code` function).
+    *   Renders a table with monthly breakdowns and a total summary.
 *   **`lib/admin_plugins/index.js`:**
     *   Registered the `ai_settings` and `ai_usage_viewer` admin plugins.
 *   **`lib/api/ai_settings_api.js`:**
