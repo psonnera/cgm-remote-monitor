@@ -290,6 +290,7 @@ A new section in Admin Tools allows you to monitor LLM usage in detail:
     *   `GET /api/v1/ai_usage/monthly_summary`
         *   **Authorization:** Requires `api:treatments:read`.
         *   **Functionality:** Returns an object containing aggregated statistics, with a breakdown by month and a grand total. The data includes detailed sums and averages for prompt, completion, and total tokens.
+        *   **Note:** This endpoint accesses application-wide configuration (like token costs) via the `ctx.settings` object, not `req.settings`.
 
 ### 4. Data Flow for AI Evaluation
 
