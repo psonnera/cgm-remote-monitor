@@ -48,6 +48,12 @@ The following environment variables must be set on your Nightscout server. After
     *   **Description:** Set to `true` to enable debugging output on the AI Evaluation report tab.
     *   *Default:* `false` (If the variable is not set, it defaults to false).
     *   When enabled, this shows the model, system prompt, user prompt template, and the final user prompt (with data injected) above the LLM's response.
+*   `AI_LLM_1K_TOKEN_COSTS_INPUT` (Optional)
+    *   **Description:** The cost for 1000 input (prompt) tokens.
+    *   *Default:* `0.005`
+*   `AI_LLM_1K_TOKEN_COSTS_OUTPUT` (Optional)
+    *   **Description:** The cost for 1000 output (completion) tokens.
+    *   *Default:* `0.015`
 
 #### b. Admin UI for Prompts (Recommended)
 
@@ -94,6 +100,10 @@ A new section in Admin Tools allows you to monitor LLM usage in detail:
         *   **Input:** Average prompt tokens per day.
         *   **Output:** Average completion tokens per day.
         *   **Total:** Average total tokens per day.
+    *   **Costs:** This is a grouped column with three sub-columns:
+        *   **Total Costs:** The total estimated cost for the month, calculated based on the token costs defined in the environment variables.
+        *   **Avg Costs/Req:** The average estimated cost per request.
+        *   **Avg Costs/Day:** The average estimated cost per day analyzed.
 4.  This detailed data helps monitor the cost and efficiency of LLM interactions.
 
 ### 2. Generating an AI Evaluation
@@ -279,7 +289,7 @@ A new section in Admin Tools allows you to monitor LLM usage in detail:
         *   **Functionality:** Records a new entry for a completed AI evaluation request. Called by the client after the final AI response is received.
     *   `GET /api/v1/ai_usage/monthly_summary`
         *   **Authorization:** Requires `api:treatments:read`.
-        *   **Functionality:** Returns an object containing aggregated statistics, with a breakdown by month and a grand total. The data includes detailed sums and averages for prompt, completion, and total tokens.
+        *   **Functionality:** Returns an object containing aggregated statistics, with a breakdown by month and a grand total. The data includes detailed sums and averages for prompt, completion, total tokens, and costs.
 
 ### 4. Data Flow for AI Evaluation
 
