@@ -167,7 +167,7 @@ A new section in Admin Tools allows you to monitor LLM usage in detail:
 ### 1. New Files and Key Modifications
 
 *   **`lib/settings.js`:**
-    *   Defines default values for all AI-related settings, including `ai_llm_model`, `ai_llm_debug`, `ai_llm_1k_token_costs_input`, and `ai_llm_1k_token_costs_output`. These settings are then read and can be overridden by environment variables in `lib/server/env.js`. `AI_LLM_PROMPT` is no longer used.
+    *   Settings like `ai_llm_model` and `ai_llm_debug` are read from environment variables. `AI_LLM_PROMPT` is no longer used.
 *   **`lib/report_plugins/ai_eval.js`:**
     *   Defines the "AI Evaluation" report tab.
     *   Its `html: function(client)` method generates the static HTML structure for the tab, including:
