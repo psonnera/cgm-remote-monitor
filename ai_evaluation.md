@@ -48,6 +48,12 @@ The following environment variables must be set on your Nightscout server. After
     *   **Description:** Set to `true` to enable debugging output on the AI Evaluation report tab.
     *   *Default:* `false` (If the variable is not set, it defaults to false).
     *   When enabled, this shows the model, system prompt, user prompt template, and the final user prompt (with data injected) above the LLM's response.
+*   `AI_LLM_1K_TOKEN_COSTS_INPUT` (Optional)
+    *   **Description:** The cost for 1000 input tokens.
+    *   *Default:* `0.005`
+*   `AI_LLM_1K_TOKEN_COSTS_OUTPUT` (Optional)
+    *   **Description:** The cost for 1000 output tokens.
+    *   *Default:* `0.015`
 
 #### b. Admin UI for Prompts (Recommended)
 
@@ -94,6 +100,10 @@ A new section in Admin Tools allows you to monitor LLM usage in detail:
         *   **Input:** Average prompt tokens per day.
         *   **Output:** Average completion tokens per day.
         *   **Total:** Average total tokens per day.
+    *   **Costs:** This is a grouped column showing the costs for the AI usage, broken down into:
+        *   **Total:** The total costs for the month.
+        *   **Avg/Req:** The average costs per request.
+        *   **Avg/Day:** The average costs per day requested.
 4.  This detailed data helps monitor the cost and efficiency of LLM interactions.
 
 ### 2. Generating an AI Evaluation
