@@ -245,13 +245,16 @@ A new section in Admin Tools allows you to monitor LLM usage in detail:
         *   `POST /api/v1/ai_usage/record`: Records token usage. Called internally by `/api/v1/ai_eval`.
         *   `GET /api/v1/ai_usage/monthly_summary`: Retrieves aggregated monthly usage data.
     *   **Currency Conversion:** This file also contains the logic for fetching and caching exchange rates from `exchangerate.host`.
-        *   It uses the `axios` library to make API calls to `https://api.exchangerate.host/latest`.
+        *   It uses the `request` library to make API calls to `https://api.exchangerate.host/convert`.
         *   The API key is passed as a query parameter `access_key`.
         *   The fetched exchange rates are stored in a new MongoDB collection named `exchange_rates`.
         *   The logic respects the `AI_LLM_EXCHANGERATE_API_POLING_INTERVALL` and `AI_LLM_EXCHANGERATE_API_LIMIT` settings.
         *   The official documentation for the API can be found at [https://exchangerate.host/documentation](https://exchangerate.host/documentation).
+*   **`lib/server/env.js`:**
+    *   Modified to read the `AI_LLM_EXCHANGERATE_API_KEY` from the environment variables.
 *   **`lib/api/index.js`:**
     *   Registered the `/ai_settings` and `/ai_usage` API routers.
+    *   Modified to pass the `env` object to the `ai_usage_api` module.
     *   Modified the `/api/v1/ai_eval` (POST) endpoint (likely located within `lib/api/index.js`):
         *   No longer uses `AI_LLM_PROMPT` environment variable.
         *   Fetches System and User prompts from the database (`ai_prompt_settings` collection).
