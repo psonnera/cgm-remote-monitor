@@ -54,6 +54,16 @@ The following environment variables must be set on your Nightscout server. After
 *   `AI_LLM_1K_TOKEN_COSTS_OUTPUT` (Optional)
     *   **Description:** The cost for 1000 output tokens.
     *   *Default:* `0.015`
+*   `AI_LLM_EXCHANGERATE_API_KEY` (Optional)
+    *   **Description:** Your API key for exchangerate.host. This is required to enable currency conversion.
+*   `AI_LLM_EXCHANGERATE_API_CURRENCY` (Optional)
+    *   **Description:** The target currency to convert costs to (e.g., `EUR`, `GBP`). If this is set, the plugin will attempt to fetch exchange rates.
+*   `AI_LLM_EXCHANGERATE_API_LIMIT` (Optional)
+    *   **Description:** The maximum number of API requests to make to the exchange rate service per month.
+    *   *Default:* `100`
+*   `AI_LLM_EXCHANGERATE_API_POLING_INTERVALL` (Optional)
+    *   **Description:** The number of days to wait before fetching a new exchange rate.
+    *   *Default:* `7`
 
 #### b. Admin UI for Prompts (Recommended)
 
@@ -104,6 +114,7 @@ A new section in Admin Tools allows you to monitor LLM usage in detail:
         *   **Total:** The total costs for the month.
         *   **Avg/Req:** The average costs per request.
         *   **Avg/Day:** The average costs per day requested.
+    *   **Currency Conversion:** If `AI_LLM_EXCHANGERATE_API_CURRENCY` is set, the table will also display the costs converted to the specified currency. A note will appear below the table indicating that conversion is active.
 4.  This detailed data helps monitor the cost and efficiency of LLM interactions.
 
 ### 2. Generating an AI Evaluation
