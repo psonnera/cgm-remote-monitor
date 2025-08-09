@@ -139,7 +139,10 @@ A new section in Admin Tools allows you to monitor LLM usage in detail:
     *   Once the main report data (from step 2) is loaded and all AI settings are confirmed to be correct, the AI evaluation will **automatically begin**. There is no separate "Show AI Evaluation" button to click in this tab.
     *   The system will display "Loading AI evaluation..." while it processes the data and communicates with the LLM.
     *   The LLM's response will then be displayed in the main content area of the tab.
-    *   **Estimated Cost:** Below the "Send to AI" button, a message will appear showing the estimated cost for the selected number of days, based on your historical usage statistics. If currency conversion is enabled, the converted amount will also be shown.
+    *   **Cost Information:** Below the "Send to AI" button, two lines of cost information will appear:
+        *   **Estimated Cost:** Shows the estimated cost for the selected number of days, based on your historical usage statistics.
+        *   **Costs for current month:** Shows the total accumulated cost for the current calendar month.
+    *   If currency conversion is enabled, the converted amounts will also be shown for both lines.
 
 ### 3. Understanding the Output
 
