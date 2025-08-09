@@ -291,6 +291,10 @@ A new section in Admin Tools allows you to monitor LLM usage in detail:
         *   `completion_tokens_used` (Number): The total completion (output) tokens for the session.
         *   `total_tokens_used` (Number): The total tokens consumed for the entire request (interim + final).
         *   `total_api_calls` (Number): The total number of API calls for the request (interim + final).
+*   **`ai_usage_summary` collection:** (New)
+    *   Stores pre-aggregated summary data for performance.
+    *   Documents have `_id` values like "2023-10" for monthly summaries and "all_time" for the overall total.
+    *   Each document contains summed fields like `requests`, `total_days_requested`, `total_tokens`, `total_costs`, etc.
 
 
 ### 3. API Endpoints
@@ -312,11 +316,17 @@ A new section in Admin Tools allows you to monitor LLM usage in detail:
     *   `POST /api/v1/ai_usage/record`
         *   **Request Body:** `{ date_from: String, date_till: String, days_requested: Number, prompt_tokens_used: Number, completion_tokens_used: Number, total_tokens_used: Number, total_api_calls: Number }`
         *   **Authorization:** Requires `api:treatments:read`.
-        *   **Functionality:** Records a new entry for a completed AI evaluation request. Called by the client after the final AI response is received.
+        *   **Functionality:** Records a new entry in `ai_usage_stats` and updates the corresponding monthly and all-time documents in `ai_usage_summary`. Called by the client after the final AI response is received.
     *   `GET /api/v1/ai_usage/monthly_summary`
         *   **Authorization:** Requires `api:treatments:read`.
-        *   **Functionality:** Returns an object containing aggregated statistics, with a breakdown by month and a grand total. The data includes detailed sums and averages for prompt, completion, and total tokens.
-        *   **Note:** This endpoint accesses application-wide configuration (like token costs) via the `ctx.settings` object, not `req.settings`.
+        *   **Functionality:** Returns an object containing aggregated statistics by reading from the `ai_usage_summary` collection. This is much faster than aggregating the raw data on each request.
+    *   `POST /api/v1/ai_usage/rebuild_summary`
+        *   **Authorization:** Requires `api:treatments:read`.
+        *   **Functionality:** Deletes all documents in `ai_usage_summary` and rebuilds them from the raw data in `ai_usage_stats`. Used by the "Recalculate Summary" button.
+    *   `POST /api/v1/ai_usage/delete_old`
+        *   **Request Body:** `{ months: Number }`
+        *   **Authorization:** Requires `api:treatments:read`.
+        *   **Functionality:** Deletes data from both `ai_usage_stats` and `ai_usage_summary` older than the specified number of months, then triggers a rebuild of the summary collection to update totals.
 
 ### 4. Data Flow for AI Evaluation
 
