@@ -64,6 +64,9 @@ The following environment variables must be set on your Nightscout server. After
 *   `AI_LLM_EXCHANGERATE_API_POLING_INTERVALL` (Optional)
     *   **Description:** The number of days to wait before fetching a new exchange rate.
     *   *Default:* `7`
+*   `AI_LLM_MONTHLY_USD_LIMIT` (Optional)
+    *   **Description:** The maximum amount of USD to be spent on AI API calls per month. If this limit is reached, the "Send to AI" button will be disabled.
+    *   *Default:* `20`
 
 #### b. Admin UI for Prompts (Recommended)
 
@@ -130,6 +133,7 @@ A new section in Admin Tools allows you to monitor LLM usage in detail:
     *   Once the main report data (from step 2) is loaded and all AI settings are confirmed to be correct, the AI evaluation will **automatically begin**. There is no separate "Show AI Evaluation" button to click in this tab.
     *   The system will display "Loading AI evaluation..." while it processes the data and communicates with the LLM.
     *   The LLM's response will then be displayed in the main content area of the tab.
+    *   **Estimated Cost:** Below the "Send to AI" button, a message will appear showing the estimated cost for the selected number of days, based on your historical usage statistics. If currency conversion is enabled, the converted amount will also be shown.
 
 ### 3. Understanding the Output
 
