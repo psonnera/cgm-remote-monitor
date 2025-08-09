@@ -80,13 +80,14 @@ For more flexible and persistent prompt management:
 2.  Locate the section titled **"AI Evaluation Prompt Settings"**. (If this section is not visible, ensure your Nightscout server has been restarted after the plugin was deployed/updated, and try a hard refresh of your browser on the admin page.)
 3.  Configure the following:
     *   **System Interim Prompt:** Defines the LLM's role for individual day analysis.
-    *   **User Interim Prompt Template:** The instruction for analyzing a single day's data. Must include `{{CGMDATA}}`.
-    *   **System Prompt:** Define the LLM's role and general instructions for the final summary.
+    *   **User Interim Prompt Template:** The instruction for analyzing a single day's data. Must include `{{CGMDATA}}`. You can also use the `{{INTERIMRETURNFORMAT}}` token to specify the desired JSON schema for the response.
+    *   **System Prompt:** Define the LLM's role and general instructions for the final summary. You can also use the `{{FINALRETURNFORMAT}}` token to specify the desired JSON schema for the response.
         *   *Example:* `You are an expert diabetes educator and data analyst. Your goal is to help the user understand their glucose patterns from the provided CGM data.`
     *   **User Prompt Template:** This is the main instruction for the LLM's final summary.
         *   **Important:** You **must** include the token `{{INTERIMAIDATA}}` exactly as written. This token will be replaced by the JSON data from the interim AI calls.
         *   You can also use the `{{PROFILE}}` token, which will be replaced with the JSON data of the active Nightscout profile (basal rates, ISF, carb ratios, targets, etc.) for the report period.
-        *   *Example:* `Please analyze the following daily summaries: {{INTERIMAIDATA}}. The user's active profile settings are: {{PROFILE}}. Provide a comprehensive overview of the user's glucose management, highlighting trends, patterns, and areas for improvement.`
+        *   You can also use the `{{FINALRETURNFORMAT}}` token to specify the desired JSON schema for the response.
+        *   *Example:* `Please analyze the following daily summaries: {{INTERIMAIDATA}}. The user's active profile settings are: {{PROFILE}}. Provide a comprehensive overview of the user's glucose management, highlighting trends, patterns, and areas for improvement. Please provide the response in the following format: {{FINALRETURNFORMAT}}`
 4.  Click the **"Save Prompts"** button (this is the default button for the admin section, usually labeled "Configure AI Prompts" or similar based on the action's `buttonLabel` which is "Save Prompts" in the plugin's definition).
     *   These prompts are stored in the Nightscout database and will be used for all AI evaluations.
     *   **Important:** If you leave the "System Prompt" or "User Prompt Template" fields empty in the Admin UI (or if they haven't been configured yet), the server will automatically use built-in default prompts for the AI evaluation.
@@ -225,12 +226,15 @@ A new section in Admin Tools allows you to monitor LLM usage in detail:
             *   The `{{PROFILE}}` placeholder is replaced with a JSON string of the active profile data (extracted from `reportData.datastorage`).
             *   An array of "interim" payloads is created, one for each day in the report.
             *   The `{{INTERIMAIDATA}}` placeholder in the final user prompt template is replaced with a JSON string of the responses from the interim calls.
+            *   It defines `interim_response_format` and `final_response_format` objects, which specify the JSON schema for the interim and final AI calls, respectively.
+            *   It creates `interim_response_format_token` and `final_response_format_token` variables, which are stringified versions of the response format objects. These are used to replace the `{{INTERIMRETURNFORMAT}}` and `{{FINALRETURNFORMAT}}` tokens in the prompts.
             *   The `{{INTERIMRETURNFORMAT}}` and `{{FINALRETURNFORMAT}}` placeholders in the prompts are replaced with the JSON schema for the interim and final calls, respectively.
             *   The final payload includes:
                 *   `model`: From `passedInClient.settings.ai_llm_model`.
                 *   `temperature`: From `passedInClient.settings.ai_llm_temperature` (default 0.7).
                 *   `max_tokens`: From `passedInClient.settings.ai_llm_max_tokens` (default 2000).
                 *   System and User messages.
+                *   `response_format`: The `interim_response_format` or `final_response_format` object, depending on the call.
             *   If `passedInClient.settings.ai_llm_debug` is `true`, this constructed payload is displayed in the `#aiEvalDebugArea`.
         *   Cleans up `window.tempAiEvalReportData` and `window.tempAiEvalPassedInClient`.
 *   **`aiResponsesDataObject`:**
@@ -362,8 +366,10 @@ A new section in Admin Tools allows you to monitor LLM usage in detail:
     *   `messages`: An array containing the system prompt and the user prompt.
     *   The user prompt has its `{{CGMDATA}}` token replaced with a JSON string derived from `reportData.datastorage` (containing entries, treatments, device status, etc.).
     *   The user prompt has its `{{PROFILE}}` token replaced with a JSON string of the active profile data from `reportData.datastorage`.
+    *   The user prompt has its `{{INTERIMRETURNFORMAT}}` and `{{FINALRETURNFORMAT}}` tokens replaced with the appropriate response format JSON schema.
     *   `temperature`: From `passedInClient.settings.ai_llm_temperature` (defaults to 0.7 if not set).
-    *   `max_tokens`: From `passedInClient.settings.ai_llm_max_tokens` (defaults to 200 if not set).
+    *   `max_tokens`: From `passedInClient.settings.ai_llm_max_tokens` (defaults to 2000 if not set).
+    *   `response_format`: The appropriate response format object (`interim_response_format` or `final_response_format`).
         ii. If `passedInClient.settings.ai_llm_debug` is `true`, this entire constructed payload is stringified and displayed in the `#aiEvalDebugArea`.
         b.  `window.tempAiEvalReportData` is deleted. `window.currentAiEvalPayload` is now set, and `passedInClient` (from `initializeAiEvalTab`'s scope) holds necessary client settings for the API call.
 4.  **Client-side initiates AI Evaluation via `/api/v1/ai_eval`:**
