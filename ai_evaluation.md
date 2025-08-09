@@ -19,6 +19,10 @@ This document serves as both a user manual and technical documentation for the p
 *   **Secure API Key Handling:** The LLM API key is stored as a server-side environment variable and is not exposed to the client.
 *   **Token Usage Tracking:** Automatically tracks the number of tokens consumed and API calls made to the LLM, viewable in Admin Tools.
 
+## Bug Fixes
+
+*   **Monthly Spending Limit Check:** The check for the `AI_LLM_MONTHLY_USD_LIMIT` was previously using an inefficient method of calculating the current month's spending. This has been fixed to use the pre-calculated monthly summary, which is faster and more reliable. This ensures that the "Send to AI" button is correctly disabled and a warning is shown when the monthly spending limit is reached.
+
 ## User Guide
 
 ### 1. Configuration
