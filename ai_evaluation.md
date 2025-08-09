@@ -19,6 +19,11 @@ This document serves as both a user manual and technical documentation for the p
 *   **Secure API Key Handling:** The LLM API key is stored as a server-side environment variable and is not exposed to the client.
 *   **Token Usage Tracking:** Automatically tracks the number of tokens consumed and API calls made to the LLM, viewable in Admin Tools.
 
+## Enhancements
+
+*   **Deterministic API Calls:** The plugin now uses specific parameters (`temperature: 0`, `top_p: 0.1`, `presence_penalty: 0`, `frequency_penalty: 0`) in the calls to the OpenAI API. This maximizes the determinism of the responses and ensures better adherence to the requested JSON schemas.
+*   **JSON Repair Guardrails:** The plugin now includes a robust JSON validation and repair mechanism. If the AI returns an invalid JSON response, the plugin will automatically make a "repair" call, asking the AI to fix the invalid JSON. This significantly improves the reliability of the analysis, especially for the multi-day summaries. These repair attempts are tracked and visible in the admin usage statistics.
+
 ## Bug Fixes
 
 *   **Monthly Spending Limit Check:** The check for the `AI_LLM_MONTHLY_USD_LIMIT` was previously using an inefficient method of calculating the current month's spending. This has been fixed to use the pre-calculated monthly summary, which is faster and more reliable. This ensures that the "Send to AI" button is correctly disabled and a warning is shown when the monthly spending limit is reached.
@@ -40,10 +45,6 @@ The following environment variables must be set on your Nightscout server. After
 *   `AI_LLM_MODEL` (Required)
     *   **Description:** The specific model name for the LLM. If not set, the server may use its own default (e.g., `gpt-4o`), but explicitly setting this is recommended to ensure desired behavior.
     *   *Examples:* `gpt-4o`, `gpt-4-turbo`, `claude-3-opus-20240229` (ensure compatibility with your API key/URL).
-*   `AI_LLM_TEMPERATURE` (Optional)
-    *   **Description:** Controls the randomness of the LLM's output. Higher values (e.g., 0.8) make the output more random, while lower values (e.g., 0.2) make it more deterministic.
-    *   *Default:* `0.7`
-    *   *Example:* `0.5`
 *   `AI_LLM_MAX_TOKENS` (Optional)
     *   **Description:** The maximum number of tokens to generate in the LLM's response.
     *   *Default:* `200`
@@ -106,6 +107,9 @@ A new section in Admin Tools allows you to monitor LLM usage in detail:
     *   **Requests:** The total number of AI evaluation requests made.
     *   **Total Days:** The total number of unique days analyzed across all requests.
     *   **Avg Days/Req:** The average number of days analyzed per request.
+    *   **Repair Calls:** This is a grouped column showing the number of repair calls made by the JSON repair guardrail.
+        *   **Total:** The total number of repair calls.
+        *   **Avg/Req:** The average number of repair calls per request.
     *   **Total Tokens:** This is a grouped column with three sub-columns:
         *   **Input:** The total number of prompt tokens sent to the LLM.
         *   **Output:** The total number of completion tokens received from the LLM.
@@ -201,42 +205,11 @@ A new section in Admin Tools allows you to monitor LLM usage in detail:
 *   **`lib/settings.js`:**
     *   Settings like `ai_llm_model` and `ai_llm_debug` are read from environment variables. `AI_LLM_PROMPT` is no longer used.
 *   **`lib/report_plugins/ai_eval.js`:**
-    *   Defines the "AI Evaluation" report tab.
-    *   Its `html: function(client)` method generates the static HTML structure for the tab, including:
-        *   `#ai-eval-status-text`: For displaying settings status.
-        *   `#sendToAiButton`: A button to (eventually) trigger the AI API call.
-        *   `#aiEvalDebugArea`: A pre-formatted area to show the constructed AI request payload when `AI_LLM_DEBUG` is true.
-        *   `#aiEvalResponseDebugArea`: A pre-formatted area to (eventually) show the raw AI response when `AI_LLM_DEBUG` is true.
-        *   Placeholders for results (future).
-    *   **Crucially, all client-side JavaScript logic for the tab is now embedded within a `<script>` tag generated inside the `html()` method's output.** This embedded script runs when the tab is activated.
-    *   The plugin's `report: function(datastorage, sorteddaystoshow, options)` method:
-        *   Is called when the "Show" button for the AI Evaluation report is clicked.
-        *   It stores `datastorage`, `options`, and `sorteddaystoshow` onto `window.tempAiEvalReportData`.
-        *   It then calls `window.processAiEvaluationData()` (via `setTimeout`) to trigger data processing.
-    *   **`initializeAiEvalTab(passedInClient)` function (called by embedded script):**
-        *   Sets up initial UI elements (static settings display, "Waiting for data..." messages).
-        *   Stores `passedInClient` on `window.tempAiEvalPassedInClient` for later use.
-    *   **`processAiEvaluationData()` function (called by `report` function):**
-        *   Retrieves `passedInClient` from `window.tempAiEvalPassedInClient` and `reportData` from `window.tempAiEvalReportData`.
-        *   Fetches System and User prompt templates from `/api/v1/ai_settings/prompts` via AJAX.
-        *   Updates prompt status display on the UI.
-        *   **If `reportData` is available and prompts are fetched:**
-            *   It constructs the full AI request payload.
-            *   The `{{CGMDATA}}` placeholder in the user prompt template is replaced with a JSON string of relevant CGM data for each day.
-            *   The `{{PROFILE}}` placeholder is replaced with a JSON string of the active profile data (extracted from `reportData.datastorage`).
-            *   An array of "interim" payloads is created, one for each day in the report.
-            *   The `{{INTERIMAIDATA}}` placeholder in the final user prompt template is replaced with a JSON string of the responses from the interim calls.
-            *   It defines `interim_response_format` and `final_response_format` objects, which specify the JSON schema for the interim and final AI calls, respectively.
-            *   It creates `interim_response_format_token` and `final_response_format_token` variables, which are stringified versions of the response format objects. These are used to replace the `{{INTERIMRETURNFORMAT}}` and `{{FINALRETURNFORMAT}}` tokens in the prompts.
-            *   The `{{INTERIMRETURNFORMAT}}` and `{{FINALRETURNFORMAT}}` placeholders in the prompts are replaced with the JSON schema for the interim and final calls, respectively.
-            *   The final payload includes:
-                *   `model`: From `passedInClient.settings.ai_llm_model`.
-                *   `temperature`: From `passedInClient.settings.ai_llm_temperature` (default 0.7).
-                *   `max_tokens`: From `passedInClient.settings.ai_llm_max_tokens` (default 2000).
-                *   System and User messages.
-                *   `response_format`: The `interim_response_format` or `final_response_format` object, depending on the call.
-            *   If `passedInClient.settings.ai_llm_debug` is `true`, this constructed payload is displayed in the `#aiEvalDebugArea`.
-        *   Cleans up `window.tempAiEvalReportData` and `window.tempAiEvalPassedInClient`.
+    *   The API call payloads are now constructed with deterministic parameters: `temperature: 0`, `top_p: 0.1`, `presence_penalty: 0`, `frequency_penalty: 0`. The `AI_LLM_TEMPERATURE` environment variable is no longer used.
+    *   A new `callAiWithRetry` function has been added to handle the interim API calls. This function includes a `try...catch` block to validate the JSON response from the AI. If parsing fails, it automatically triggers up to two repair attempts.
+    *   A new global counter, `window.aiRepairCalls`, is used to track the number of repair calls made during a session. This counter is reset with each new analysis.
+    *   The `usagePayload` sent to the `/api/v1/ai_usage/record` endpoint now includes the `repair_calls` count.
+    *   The JSON schemas for both the interim and final AI calls have been updated to include a `profile_snapshot_used: true` boolean flag in the `meta` object.
 *   **`aiResponsesDataObject`:**
     *   A global object that stores the state of the AI evaluation.
     *   `merged_by_date`: An object containing the merged interim responses by date.
