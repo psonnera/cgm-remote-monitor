@@ -209,6 +209,42 @@ A new section in Admin Tools allows you to monitor LLM usage in detail:
 *   **`lib/settings.js`:**
     *   Settings like `ai_llm_model` and `ai_llm_debug` are read from environment variables. `AI_LLM_PROMPT` is no longer used.
 *   **`lib/report_plugins/ai_eval.js`:**
+    *   Defines the "AI Evaluation" report tab.
+    *   Its `html: function(client)` method generates the static HTML structure for the tab, including:
+    *   `#ai-eval-status-text`: For displaying settings status.
+    *   `#sendToAiButton`: A button to (eventually) trigger the AI API call.
+    *   `#aiEvalDebugArea`: A pre-formatted area to show the constructed AI request payload when `AI_LLM_DEBUG` is true.
+    *   `#aiEvalResponseDebugArea`: A pre-formatted area to (eventually) show the raw AI response when `AI_LLM_DEBUG` is true.
+    *   Placeholders for results (future).
+        *   **Crucially, all client-side JavaScript logic for the tab is now embedded within a `<script>` tag generated inside the `html()` method's output.** This embedded script runs when the tab is activated.
+        *   The plugin's `report: function(datastorage, sorteddaystoshow, options)` method:
+    *   Is called when the "Show" button for the AI Evaluation report is clicked.
+    *   It stores `datastorage`, `options`, and `sorteddaystoshow` onto `window.tempAiEvalReportData`.
+    *   It then calls `window.processAiEvaluationData()` (via `setTimeout`) to trigger data processing.
+        *   **`initializeAiEvalTab(passedInClient)` function (called by embedded script):**
+    *   Sets up initial UI elements (static settings display, "Waiting for data..." messages).
+    *   Stores `passedInClient` on `window.tempAiEvalPassedInClient` for later use.
+        *   **`processAiEvaluationData()` function (called by `report` function):**
+    *   Retrieves `passedInClient` from `window.tempAiEvalPassedInClient` and `reportData` from `window.tempAiEvalReportData`.
+    *   Fetches System and User prompt templates from `/api/v1/ai_settings/prompts` via AJAX.
+    *   Updates prompt status display on the UI.
+    *   **If `reportData` is available and prompts are fetched:**
+        *   It constructs the full AI request payload.
+        *   The `{{CGMDATA}}` placeholder in the user prompt template is replaced with a JSON string of relevant CGM data for each day.
+        *   The `{{PROFILE}}` placeholder is replaced with a JSON string of the active profile data (extracted from `reportData.datastorage`).
+        *   An array of "interim" payloads is created, one for each day in the report.
+        *   The `{{INTERIMAIDATA}}` placeholder in the final user prompt template is replaced with a JSON string of the responses from the interim calls.
+        *   It defines `interim_response_format` and `final_response_format` objects, which specify the JSON schema for the interim and final AI calls, respectively.
+        *   It creates `interim_response_format_token` and `final_response_format_token` variables, which are stringified versions of the response format objects. These are used to replace the `{{INTERIMRETURNFORMAT}}` and `{{FINALRETURNFORMAT}}` tokens in the prompts.
+        *   The `{{INTERIMRETURNFORMAT}}` and `{{FINALRETURNFORMAT}}` placeholders in the prompts are replaced with the JSON schema for the interim and final calls, respectively.
+        *   The final payload includes:
+            *   `model`: From `passedInClient.settings.ai_llm_model`.
+            *   `temperature`: From `passedInClient.settings.ai_llm_temperature` (default 0.7).
+            *   `max_tokens`: From `passedInClient.settings.ai_llm_max_tokens` (default 2000).
+            *   System and User messages.
+            *   `response_format`: The `interim_response_format` or `final_response_format` object, depending on the call.
+        *   If `passedInClient.settings.ai_llm_debug` is `true`, this constructed payload is displayed in the `#aiEvalDebugArea`.
+    *   Cleans up `window.tempAiEvalReportData` and `window.tempAiEvalPassedInClient`.
     *   The API call payloads are now constructed with deterministic parameters: `top_p: 0.1`, `presence_penalty: 0`, `frequency_penalty: 0`. The `temperature` is now configurable via the `AI_LLM_TEMPERATURE` environment variable, with a default of `0` to maximize determinism.
     *   A new `callAiWithRetry` function has been added to handle the interim API calls. This function includes a `try...catch` block to validate the JSON response from the AI. If parsing fails, it automatically triggers up to two repair attempts.
     *   A new global counter, `window.aiRepairCalls`, is used to track the number of repair calls made during a session. This counter is reset with each new analysis.
