@@ -119,6 +119,7 @@ A new section in Admin Tools allows you to monitor LLM usage in detail:
         *   **Avg/Day:** The average costs per day requested.
     *   **Currency Conversion:** If `AI_LLM_EXCHANGERATE_API_CURRENCY` is set, the table will also display the costs converted to the specified currency. A note will appear below the table indicating that conversion is active.
 4.  This detailed data helps monitor the cost and efficiency of LLM interactions.
+5.  **Recalculate Summary:** A "Recalculate Summary" button is available. If you suspect the summary data is out of sync with the raw data (e.g., after manual database changes), you can use this button to trigger a full recalculation.
 
 ### 2. Generating an AI Evaluation
 
