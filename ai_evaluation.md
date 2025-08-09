@@ -225,6 +225,7 @@ A new section in Admin Tools allows you to monitor LLM usage in detail:
             *   The `{{PROFILE}}` placeholder is replaced with a JSON string of the active profile data (extracted from `reportData.datastorage`).
             *   An array of "interim" payloads is created, one for each day in the report.
             *   The `{{INTERIMAIDATA}}` placeholder in the final user prompt template is replaced with a JSON string of the responses from the interim calls.
+            *   The `{{INTERIMRETURNFORMAT}}` and `{{FINALRETURNFORMAT}}` placeholders in the prompts are replaced with the JSON schema for the interim and final calls, respectively.
             *   The final payload includes:
                 *   `model`: From `passedInClient.settings.ai_llm_model`.
                 *   `temperature`: From `passedInClient.settings.ai_llm_temperature` (default 0.7).
