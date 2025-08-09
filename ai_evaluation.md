@@ -147,7 +147,14 @@ A new section in Admin Tools allows you to monitor LLM usage in detail:
 ### 3. Understanding the Output
 
 *   **AI Evaluation:** The main content area will show the direct response from the LLM, based on your prompts and data. This may include text, lists, and potentially tables.
-*   **Token Usage:** Information about the number of tokens used for the current evaluation will be displayed (e.g., "Tokens used for this evaluation: XXXX"). This can help you monitor usage.
+*   **AI Usage Statistics:** After a successful analysis, a box will appear below the AI's response, showing detailed usage statistics for the session. This box is hidden until the analysis is complete. It includes:
+    *   The date range and number of days analyzed.
+    *   The total number of API calls made (both interim and final).
+    *   A breakdown of "Overall Session Usage" including:
+        *   **Prompt Tokens:** The total number of tokens sent to the AI.
+        *   **Completion Tokens:** The total number of tokens received from the AI.
+        *   **Total Tokens:** The sum of prompt and completion tokens.
+    *   For each token count, the associated cost in USD and the converted currency (if enabled) is also displayed.
 *   **Debug Information (If Enabled):** If `AI_LLM_DEBUG` is set to `true` (see Configuration section):
     *   Four dedicated debug areas will appear in the AI Evaluation tab:
         *   **"AI INTERIM PROMPT PAYLOAD (DEBUG):"** This area shows the JSON payload for the interim calls.
