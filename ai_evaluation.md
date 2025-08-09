@@ -45,6 +45,10 @@ The following environment variables must be set on your Nightscout server. After
 *   `AI_LLM_MODEL` (Required)
     *   **Description:** The specific model name for the LLM. If not set, the server may use its own default (e.g., `gpt-4o`), but explicitly setting this is recommended to ensure desired behavior.
     *   *Examples:* `gpt-4o`, `gpt-4-turbo`, `claude-3-opus-20240229` (ensure compatibility with your API key/URL).
+*   `AI_LLM_TEMPERATURE` (Optional)
+    *   **Description:** Controls the randomness of the LLM's output. Higher values (e.g., 0.8) make the output more random, while lower values make it more deterministic. To maximize determinism and schema adherence, the default is now `0`.
+    *   *Default:* `0`
+    *   *Example:* `0.5`
 *   `AI_LLM_MAX_TOKENS` (Optional)
     *   **Description:** The maximum number of tokens to generate in the LLM's response.
     *   *Default:* `200`
@@ -205,7 +209,7 @@ A new section in Admin Tools allows you to monitor LLM usage in detail:
 *   **`lib/settings.js`:**
     *   Settings like `ai_llm_model` and `ai_llm_debug` are read from environment variables. `AI_LLM_PROMPT` is no longer used.
 *   **`lib/report_plugins/ai_eval.js`:**
-    *   The API call payloads are now constructed with deterministic parameters: `temperature: 0`, `top_p: 0.1`, `presence_penalty: 0`, `frequency_penalty: 0`. The `AI_LLM_TEMPERATURE` environment variable is no longer used.
+    *   The API call payloads are now constructed with deterministic parameters: `top_p: 0.1`, `presence_penalty: 0`, `frequency_penalty: 0`. The `temperature` is now configurable via the `AI_LLM_TEMPERATURE` environment variable, with a default of `0` to maximize determinism.
     *   A new `callAiWithRetry` function has been added to handle the interim API calls. This function includes a `try...catch` block to validate the JSON response from the AI. If parsing fails, it automatically triggers up to two repair attempts.
     *   A new global counter, `window.aiRepairCalls`, is used to track the number of repair calls made during a session. This counter is reset with each new analysis.
     *   The `usagePayload` sent to the `/api/v1/ai_usage/record` endpoint now includes the `repair_calls` count.
