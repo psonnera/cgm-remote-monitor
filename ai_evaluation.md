@@ -27,6 +27,7 @@ This document serves as both a user manual and technical documentation for the p
 ## Bug Fixes
 
 *   **Monthly Spending Limit Check:** The check for the `AI_LLM_MONTHLY_USD_LIMIT` was previously using an inefficient method of calculating the current month's spending. This has been fixed to use the pre-calculated monthly summary, which is faster and more reliable. This ensures that the "Send to AI" button is correctly disabled and a warning is shown when the monthly spending limit is reached.
+*   **Stale Cost Estimate:** Fixed a bug where the "Estimated costs" display would not clear when loading a new dataset. This could lead to a misleading, stale cost being shown if the new analysis did not complete. The estimate is now cleared immediately when new data is loaded.
 
 ## User Guide
 
@@ -76,6 +77,10 @@ The following environment variables must be set on your Nightscout server. After
 *   `AI_LLM_MONTHLY_USD_LIMIT` (Optional)
     *   **Description:** The maximum amount of USD to be spent on AI API calls per month. If this limit is reached, the "Send to AI" button will be disabled.
     *   *Default:* `20`
+*   `AI_LLM_DEFAULT_DISPLAY` (Optional)
+    *   **Description:** Sets the default display mode for the AI responses in the report tab.
+    *   *Default:* `Show all results`
+    *   *Options:* `Show all results`, `Show final result only`
 
 #### b. Admin UI for Prompts (Recommended)
 
@@ -144,10 +149,14 @@ A new section in Admin Tools allows you to monitor LLM usage in detail:
     *   Upon opening the tab, the plugin will automatically check for all required configurations (API URL, Model, System Prompt, User Prompt Template).
     *   If any settings are missing, a detailed error message will be displayed, guiding you on where to configure each item.
     *   If all settings are correctly configured, a confirmation message will appear.
-4.  **Automatic Analysis:**
-    *   Once the main report data (from step 2) is loaded and all AI settings are confirmed to be correct, the AI evaluation will **automatically begin**. There is no separate "Show AI Evaluation" button to click in this tab.
-    *   The system will display "Loading AI evaluation..." while it processes the data and communicates with the LLM.
-    *   The LLM's response will then be displayed in the main content area of the tab.
+4.  **Generating the Analysis:**
+    *   **Display Mode:** Above the "Send to AI" button, a new dropdown menu allows you to control how results are displayed:
+        *   **Show all results:** This will display the analysis for each day (interim results) one by one, followed by the final summary report.
+        *   **Show final result only:** This will only display the final summary report after all daily analyses are complete.
+        *   The default value for this dropdown can be set using the `AI_LLM_DEFAULT_DISPLAY` environment variable.
+    *   Click the **"Send to AI"** button to begin the analysis.
+    *   The system will show the progress as it processes each day.
+    *   The AI's JSON responses will be rendered into user-friendly HTML tables and lists for easy reading.
     *   **Cost Information:** Below the "Send to AI" button, two lines of cost information will appear:
         *   **Estimated Cost:** Shows the estimated cost for the selected number of days, based on your historical usage statistics.
         *   **Costs for current month:** Shows the total accumulated cost for the current calendar month.
@@ -155,10 +164,10 @@ A new section in Admin Tools allows you to monitor LLM usage in detail:
 
 ### 3. Understanding the Output
 
-*   **AI Evaluation:** The main content area will show the direct response from the LLM, based on your prompts and data. This may include text, lists, and potentially tables.
+*   **AI Evaluation:** The main content area will show the rendered HTML reports from the LLM's JSON responses. Depending on the display mode, this will be a series of daily reports followed by a final summary, or just the final summary.
 *   **AI Usage Statistics:** After a successful analysis, a box will appear below the AI's response, showing detailed usage statistics for the session. This box is hidden until the analysis is complete. It includes:
     *   The date range and number of days analyzed.
-    *   The total number of API calls made (both interim and final).
+    *   The total number of API calls made (interim, final, and any repair calls).
     *   A breakdown of "Overall Session Usage" including:
         *   **Prompt Tokens:** The total number of tokens sent to the AI.
         *   **Completion Tokens:** The total number of tokens received from the AI.
@@ -322,7 +331,7 @@ A new section in Admin Tools allows you to monitor LLM usage in detail:
         *   `prompt_tokens_used` (Number): The total prompt (input) tokens for the session.
         *   `completion_tokens_used` (Number): The total completion (output) tokens for the session.
         *   `total_tokens_used` (Number): The total tokens consumed for the entire request (interim + final).
-        *   `total_api_calls` (Number): The total number of API calls for the request (interim + final).
+        *   `total_api_calls` (Number): The total number of API calls for the request (interim + final + repair calls).
 *   **`ai_usage_summary` collection:** (New)
     *   Stores pre-aggregated summary data for performance.
     *   Documents have `_id` values like "2023-10" for monthly summaries and "all_time" for the overall total.
