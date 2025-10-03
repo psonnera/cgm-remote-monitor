@@ -23,6 +23,7 @@ This document serves as both a user manual and technical documentation for the p
 
 *   **Deterministic API Calls:** The plugin now uses specific parameters (`temperature: 0`, `top_p: 0.1`, `presence_penalty: 0`, `frequency_penalty: 0`) in the calls to the OpenAI API. This maximizes the determinism of the responses and ensures better adherence to the requested JSON schemas.
 *   **JSON Repair Guardrails:** The plugin now includes a robust JSON validation and repair mechanism. If the AI returns an invalid JSON response, the plugin will automatically make a "repair" call, asking the AI to fix the invalid JSON. This significantly improves the reliability of the analysis, especially for the multi-day summaries. These repair attempts are tracked and visible in the admin usage statistics.
+*   **Accordion UI for Reports:** The final and interim reports are now displayed in an accordion-style interface, making the results easier to navigate and read. The final report is expanded by default, while the interim reports are collapsed.
 
 ## Bug Fixes
 
@@ -166,7 +167,7 @@ A new section in Admin Tools allows you to monitor LLM usage in detail:
 
 ### 3. Understanding the Output
 
-*   **AI Evaluation:** The main content area will show the rendered HTML reports from the LLM's JSON responses. Depending on the display mode, this will be a series of daily reports followed by a final summary, or just the final summary.
+*   **AI Evaluation:** The main content area will show the rendered HTML reports from the LLM's JSON responses, displayed in an accordion format. Each report (final and interim) is an item in the accordion. The final report is expanded by default.
 *   **AI Usage Statistics:** After a successful analysis, a box will appear below the AI's response, showing detailed usage statistics for the session. This box is hidden until the analysis is complete. It includes:
     *   The date range and number of days analyzed.
     *   The total number of API calls made (interim, final, and any repair calls).
