@@ -28,6 +28,8 @@ This document serves as both a user manual and technical documentation for the p
 
 *   **Monthly Spending Limit Check:** The check for the `AI_LLM_MONTHLY_USD_LIMIT` was previously using an inefficient method of calculating the current month's spending. This has been fixed to use the pre-calculated monthly summary, which is faster and more reliable. This ensures that the "Send to AI" button is correctly disabled and a warning is shown when the monthly spending limit is reached.
 *   **Stale Cost Estimate:** Fixed a bug where the "Estimated costs" display would not clear when loading a new dataset. This could lead to a misleading, stale cost being shown if the new analysis did not complete. The estimate is now cleared immediately when new data is loaded.
+*   **Button State During Final Call:** Fixed an issue where the "Send to AI" button would become active between the interim and final analysis calls. The button now displays "Final call..." and remains disabled until the entire process is complete, preventing accidental clicks.
+*   **Report Display Order:** The final summary report is now displayed at the top, above the individual daily (interim) reports, for a more logical and user-friendly layout.
 
 ## User Guide
 
