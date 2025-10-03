@@ -32,6 +32,7 @@ This document serves as both a user manual and technical documentation for the p
 *   **Stale Cost Estimate:** Fixed a bug where the "Estimated costs" display would not clear when loading a new dataset. This could lead to a misleading, stale cost being shown if the new analysis did not complete. The estimate is now cleared immediately when new data is loaded.
 *   **Button State During Final Call:** Fixed an issue where the "Send to AI" button would become active between the interim and final analysis calls. The button now displays "Final call..." and remains disabled until the entire process is complete, preventing accidental clicks.
 *   **Report Display Order:** The final summary report is now displayed at the top, above the individual daily (interim) reports, for a more logical and user-friendly layout.
+*   **Analysis State Reset on Cancellation:** Fixed a critical bug where cancelling an analysis would not fully reset the plugin's state. Previously, starting a new analysis after a cancellation would cause it to resume from the old, cancelled state. The cancellation process now performs a complete reset of all data and UI elements, ensuring that users can start a fresh analysis from a clean slate without needing to reload the report.
 
 ## User Guide
 
