@@ -18,7 +18,7 @@ This document serves as both a user manual and technical documentation for the p
 *   **Debugging Mode:** An option to display the exact prompts and model sent to the LLM, shown above the LLM's response in the AI Evaluation tab.
 *   **Secure API Key Handling:** The LLM API key is stored as a server-side environment variable and is not exposed to the client.
 *   **Token Usage Tracking:** Automatically tracks the number of tokens consumed and API calls made to the LLM, viewable in Admin Tools.
-*   **Cancellable Analysis:** A "Cancel" button appears during an active analysis, allowing users to stop the process at any time. Clicking it fully resets the analysis state, allowing for a clean start.
+*   **Cancellable Analysis:** A "Cancel" button appears during an active analysis, allowing users to stop the process at any time.
 
 ## Enhancements
 
@@ -159,7 +159,7 @@ A new section in Admin Tools allows you to monitor LLM usage in detail:
         *   **Show final result only:** This will only display the final summary report after all daily analyses are complete.
         *   The default value for this dropdown can be set using the `AI_LLM_DEFAULT_DISPLAY` environment variable.
     *   Click the **"Send to AI"** button to begin the analysis.
-    *   A **"Cancel"** button will appear next to the "Send to AI" button while the analysis is running. Clicking this button will immediately stop the process and completely reset the interface, allowing you to start a new analysis from a clean state.
+    *   A **"Cancel"** button will appear next to the "Send to AI" button while the analysis is running. Clicking this button will immediately stop the process.
     *   The system will show the progress as it processes each day.
     *   The AI's JSON responses will be rendered into user-friendly HTML tables and lists for easy reading.
     *   **Cost Information:** Below the "Send to AI" button, two lines of cost information will appear:
