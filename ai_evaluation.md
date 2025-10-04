@@ -18,20 +18,6 @@ This document serves as both a user manual and technical documentation for the p
 *   **Debugging Mode:** An option to display the exact prompts and model sent to the LLM, shown above the LLM's response in the AI Evaluation tab.
 *   **Secure API Key Handling:** The LLM API key is stored as a server-side environment variable and is not exposed to the client.
 *   **Token Usage Tracking:** Automatically tracks the number of tokens consumed and API calls made to the LLM, viewable in Admin Tools.
-*   **Cancellable Analysis:** A "Cancel" button appears during an active analysis, allowing users to stop the process at any time.
-
-## Enhancements
-
-*   **Deterministic API Calls:** The plugin now uses specific parameters (`temperature: 0`, `top_p: 0.1`, `presence_penalty: 0`, `frequency_penalty: 0`) in the calls to the OpenAI API. This maximizes the determinism of the responses and ensures better adherence to the requested JSON schemas.
-*   **JSON Repair Guardrails:** The plugin now includes a robust JSON validation and repair mechanism. If the AI returns an invalid JSON response, the plugin will automatically make a "repair" call, asking the AI to fix the invalid JSON. This significantly improves the reliability of the analysis, especially for the multi-day summaries. These repair attempts are tracked and visible in the admin usage statistics.
-*   **Accordion UI for Reports:** The final and interim reports are now displayed in an accordion-style interface, making the results easier to navigate and read. The final report is expanded by default, while the interim reports are collapsed.
-
-## Bug Fixes
-
-*   **Monthly Spending Limit Check:** The check for the `AI_LLM_MONTHLY_USD_LIMIT` was previously using an inefficient method of calculating the current month's spending. This has been fixed to use the pre-calculated monthly summary, which is faster and more reliable. This ensures that the "Send to AI" button is correctly disabled and a warning is shown when the monthly spending limit is reached.
-*   **Stale Cost Estimate:** Fixed a bug where the "Estimated costs" display would not clear when loading a new dataset. This could lead to a misleading, stale cost being shown if the new analysis did not complete. The estimate is now cleared immediately when new data is loaded.
-*   **Button State During Final Call:** Fixed an issue where the "Send to AI" button would become active between the interim and final analysis calls. The button now displays "Final call..." and remains disabled until the entire process is complete, preventing accidental clicks.
-*   **Report Display Order:** The final summary report is now displayed at the top, above the individual daily (interim) reports, for a more logical and user-friendly layout.
 
 ## User Guide
 
@@ -40,6 +26,8 @@ This document serves as both a user manual and technical documentation for the p
 #### a. Environment Variables
 
 The following environment variables must be set on your Nightscout server. After setting or changing these, **restart your Nightscout server**.
+
+#### Required
 
 *   `AI_LLM_KEY` (Required)
     *   **Description:** Your API key for the LLM service (e.g., OpenAI).
@@ -50,7 +38,10 @@ The following environment variables must be set on your Nightscout server. After
 *   `AI_LLM_MODEL` (Required)
     *   **Description:** The specific model name for the LLM. If not set, the server may use its own default (e.g., `gpt-4o`), but explicitly setting this is recommended to ensure desired behavior.
     *   *Examples:* `gpt-4o`, `gpt-4-turbo`, `claude-3-opus-20240229` (ensure compatibility with your API key/URL).
-*   `AI_LLM_TEMPERATURE` (Optional)
+
+#### Optional 
+
+* `AI_LLM_TEMPERATURE` (Optional)
     *   **Description:** Controls the randomness of the LLM's output. Higher values (e.g., 0.8) make the output more random, while lower values make it more deterministic. To maximize determinism and schema adherence, the default is now `0`.
     *   *Default:* `0`
     *   *Example:* `0.5`
@@ -94,20 +85,144 @@ For more flexible and persistent prompt management:
 2.  Locate the section titled **"AI Evaluation Prompt Settings"**. (If this section is not visible, ensure your Nightscout server has been restarted after the plugin was deployed/updated, and try a hard refresh of your browser on the admin page.)
 3.  Configure the following:
     *   **System Interim Prompt:** Defines the LLM's role for individual day analysis.
-    *   **User Interim Prompt Template:** The instruction for analyzing a single day's data. Must include `{{CGMDATA}}`. You can also use the `{{INTERIMRETURNFORMAT}}` token to specify the desired JSON schema for the response.
-    *   **System Prompt:** Define the LLM's role and general instructions for the final summary. You can also use the `{{FINALRETURNFORMAT}}` token to specify the desired JSON schema for the response.
-        *   *Example:* `You are an expert diabetes educator and data analyst. Your goal is to help the user understand their glucose patterns from the provided CGM data.`
+        * Available Tokens (optional): `{{PROFILE}}`, `{{INTERIMRETURNFORMAT}}`
+    *   **User Interim Prompt Template:** The instruction for analyzing a single day's data.
+        * Available Tokens (**mandatory**): `{{CGMDATA}}`, `{{DATE}}`, `{{PROFILE}}`, `{{INTERIMRETURNFORMAT}}`
+    *   **System Prompt:** Define the LLM's role and general instructions for the final summary. 
+        * Available Tokens (optional): `{{PROFILE}}`, `{{FINALRETURNFORMAT}}`
     *   **User Prompt Template:** This is the main instruction for the LLM's final summary.
-        *   **Important:** You **must** include the token `{{INTERIMAIDATA}}` exactly as written. This token will be replaced by the JSON data from the interim AI calls.
-        *   You can also use the `{{PROFILE}}` token, which will be replaced with the JSON data of the active Nightscout profile (basal rates, ISF, carb ratios, targets, etc.) for the report period.
-        *   You can also use the `{{FINALRETURNFORMAT}}` token to specify the desired JSON schema for the response.
-        *   *Example:* `Please analyze the following daily summaries: {{INTERIMAIDATA}}. The user's active profile settings are: {{PROFILE}}. Provide a comprehensive overview of the user's glucose management, highlighting trends, patterns, and areas for improvement. Please provide the response in the following format: {{FINALRETURNFORMAT}}`
-4.  Click the **"Save Prompts"** button (this is the default button for the admin section, usually labeled "Configure AI Prompts" or similar based on the action's `buttonLabel` which is "Save Prompts" in the plugin's definition).
+        * Available Tokens (optional):  `{{TIMEFROM}}`, `{{TIMETILL}}`, `{{DAYS}}`, `{{PROFILE}}`
+        * Available Tokens (**mandatory**): `{{INTERIMAIDATA}}`, `{{FINALRETURNFORMAT}}`
+    * Token Explanation:
+        * `{{CGMDATA}}`: Structured CGM data for the day that is sent to AI  
+        * `{{PROFILE}}`: JSON data of the active Nightscout profile (basal rates, ISF, carb ratios, targets, etc.) for the report period
+        * `{{DATE}}` / `{{TIMEFROM}}` / `{{TIMETILL}}` / `{{DAYS}}`: Information about the timeframe delivered
+        * `{{INTERIMAIDATA}}`: The data from the interim calls
+        * `{{INTERIMRETURNFORMAT}}` / `{{FINALRETURNFORMAT}}`: The returnformat expected from AI, so the final call and printing the result are technicaly possible
+4.  Click the **"Save Prompts"** button
     *   These prompts are stored in the Nightscout database and will be used for all AI evaluations.
     *   **Important:** If you leave the "System Prompt" or "User Prompt Template" fields empty in the Admin UI (or if they haven't been configured yet), the server will automatically use built-in default prompts for the AI evaluation.
-        *   **Default System Prompt:** `"You are an expert for diabetes and analyzing cgm data from nightscout"`
-        *   **Default User Prompt Template (internal, if not set by user):** `"Analyze the provided glucose data: {{CGMDATA}} using this profile: {{PROFILE}}. Identify any patterns, suggest potential reasons for fluctuations, and recommend actions to improve glucose stability. Present the analysis clearly, using tables or bullet points where appropriate."`
     *   It is recommended to review and customize these prompts in the Admin UI to best suit your analytical needs.
+
+##### Prompt Examples
+
+###### System Interim Prompt
+
+````
+You are an endocrinologist specialized in type 1 diabetes, expert in Nightscout CGM analytics.
+
+SCOPE
+- Analyze exactly one calendar day of Nightscout data (CGM entries + treatments + profile).
+- Output must be self-contained, standardized, and aggregation-ready for later multi-day synthesis.
+
+CONDUCT
+- Use medical terminology only. Evidence-based, data-first. No speculation.
+- Do not reference other days. This analysis stands alone.
+- If no data is available for a certain time, mark it as null. Do not make up data. Stick exactly to the delivered data.
+- If a metric cannot be computed, return null and explain in data_quality_notes.
+- Output strictly valid JSON. No prose, no backticks.
+
+DATA & UNITS
+- Glucose mg/dL.
+- Day partition: 00–06, 06–12, 12–18, 18–24 (local timezone of the data; assume timestamps in ms since epoch unless explicit).
+- Ranges: Low <70; Target 70–180; High >180.
+- TIR/TBR/TAR should be **time-weighted** (prefer sampling intervals; if only points exist, assume uniform spacing between readings and exclude gaps >15 min).
+- CV = SD / mean × 100.
+- Count hypos/hypers as **episodes** with persistence ≥15 minutes (>=3 consecutive 5‑min points). Merge episodes if separation <15 minutes.
+- Episode duration = continuous time within the threshold.
+- Diurnal distributions report: mean (avg), SD, %below/%in_range/%above by time block (time-weighted).
+- Data gaps: any gap >15 min. Sensor failure: explicit flags if present; otherwise infer improbable plateaus (≥45 min identical SGV) or out-of-physiology SGV (<40 or >400) as quality issues (do not exclude unless clearly erroneous; if excluded, document explicitly).
+- MAGE (Mean Amplitude of Glycemic Excursions): compute if ≥18 hours valid data. Algorithm: identify turning points via derivative sign change; keep excursions with absolute amplitude ≥1 SD of the day; MAGE = mean amplitude of qualifying peak–nadir (or nadir–peak) pairs. If insufficient qualifying pairs (n<4), set null and note.
+
+RECOMMENDATION RULES (day-limited)
+- Recommendations must cite concrete evidence from this day (e.g., time windows, % out of range, episode counts/durations).
+- Basal/I:C/ISF comments only if patterns align with classic signatures (e.g., fasting hyperglycemia 03:00–06:00 without carbs/bolus suggests dawn phenomenon); otherwise write none.
+
+OUTPUT
+- Respond with JSON **exactly** in the schema provided via the user prompt. Valid JSON, no markdown.
+````
+
+###### User Interim Prompt
+
+````
+Analyze Nightscout data for date {{DATE}}.
+
+INPUTS
+{{CGMDATA}}
+
+PROFILE
+{{PROFILE}}
+
+OBJECTIVES
+- Abnormalities/trends: hypoglycemia, hyperglycemia (timing, frequency, duration, pattern), variability (SD, CV, MAGE if calculable), diurnal patterns.
+- Diurnal profile: distribution 00–06, 06–12, 12–18, 18–24; classify <70 / 70–180 / >180.
+- Therapy adjustment (day-restricted): basal/I:C/ISF notes, timing issues (e.g., late bolus), DIA plausibility, daily routine effects.
+- Additional: TIR/TBR/TAR; mean/median/variance; closed-loop info if present; sensor failures/data gaps; alarm exposure if present.
+
+RESPONSE RULES
+- Use data only from this date.
+- Use mg/dL and percent.
+- If anything is non-computable, set the numeric field to null and add a clear explanation in data_quality_notes.
+
+RETURN FORMAT
+Return **only** valid JSON (no backticks, no trailing commas), matching exactly this schema and keys:
+
+{{INTERIMRETURNFORMAT}}
+````
+
+###### System Final Prompt
+
+````
+You are an endocrinologist specialized in type 1 diabetes and Nightscout analytics. Your task is to synthesize multiple single-day analyses (already standardized JSON) plus the Nightscout profile.
+
+CONDUCT
+- Medical terminology only. Evidence-based. No generalities.
+- No hallucinations; if data insufficient, state explicitly.
+- Output strictly valid JSON (no markdown; no commentary).
+- If no data is available for a certain time, do not make it up
+
+AGGREGATION RULES
+- Inputs: array of daily JSON objects (exact schema from interim step), covering {{DAYS}} days for {{TIMEFROM}}–{{TIMETILL}}.
+- Overall metrics:
+  • Averages/SD/CV computed on pooled time-weighted series if available; otherwise weight by each day’s valid time.
+  • TIR/TBR/TAR: time-weighted across all valid intervals; exclude gaps >15 min.
+  • MAGE_overall: if ≥60% of days have valid MAGE, compute median of per-day MAGE; else null with note.
+- Episodes: merge across midnight if separation <15 min. Provide counts & durations by (a) total, (b) diurnal blocks, and (c) weekday vs weekend if possible from timestamps.
+- Diurnal patterns: aggregate by local time of day; report avg, SD, and %below/in/above for each 6-hour block.
+- Trend detection:
+  • Nocturnal hypoglycemia signature: ≥2 days with hypo episodes 00–06 totaling ≥30 min/day.
+  • Dawn phenomenon: pre-breakfast rise (≈03:00–08:00) with no carbs/bolus within prior 3h on ≥2 days, and 2h mean > target_high.
+  • Postprandial hyperglycemia: peaks >180 within 1–3h after carb entries on ≥2 days.
+  • Persistent hyperglycemia: >50% time >180 on ≥3 days.
+- Recommendations must be tied to quantified evidence (reference blocks, % out of range, episode stats). Separate “therapy_settings” (basal/I:C/ISF/DIA) vs “behavioral_timing” (bolus timing, meal timing, exercise).
+
+OUTPUT
+- Use the exact schema provided via the user prompt. Valid JSON only.
+````
+
+###### User Final Prompt
+
+````
+Synthesize the following daily analyses for {{TIMEFROM}}–{{TIMETILL}} ({{DAYS}} days):
+
+{{INTERIMAIDATA}}
+
+Profile for context:
+{{PROFILE}}
+
+OBJECTIVES
+- Abnormalities & trends across days (hypo/hyper timing, frequency, duration, patterns).
+- Variability (SD, CV, MAGE_overall if feasible).
+- Diurnal patterns (00–06, 06–12, 12–18, 18–24).
+- Therapy adjustment suggestions: basal, I:C, ISF, DIA; timing issues; lifestyle factors.
+- Additional: TIR/TBR/TAR; sensor failures/data gaps; alarm exposure (if present); loop behavior (if present).
+
+RETURN FORMAT
+Return **only** valid JSON (no backticks, no text), matching the following schema and keys:
+
+{{FINALRETURNFORMAT}}
+
+````
 
 #### c. Viewing AI Usage Statistics (Admin Tools)
 
@@ -159,7 +274,6 @@ A new section in Admin Tools allows you to monitor LLM usage in detail:
         *   **Show final result only:** This will only display the final summary report after all daily analyses are complete.
         *   The default value for this dropdown can be set using the `AI_LLM_DEFAULT_DISPLAY` environment variable.
     *   Click the **"Send to AI"** button to begin the analysis.
-    *   A **"Cancel"** button will appear next to the "Send to AI" button while the analysis is running. Clicking this button will immediately stop the process.
     *   The system will show the progress as it processes each day.
     *   The AI's JSON responses will be rendered into user-friendly HTML tables and lists for easy reading.
     *   **Cost Information:** Below the "Send to AI" button, two lines of cost information will appear:
@@ -168,6 +282,13 @@ A new section in Admin Tools allows you to monitor LLM usage in detail:
     *   If currency conversion is enabled, the converted amounts will also be shown for both lines.
 
 ### 3. Understanding the Output
+
+#### DISCLAIMER
+````
+The information generated is not medical advice and must not be used as a substitute for professional diagnosis or treatment.
+The AI analysis may be inaccurate, incomplete, or incorrect. Use it only as a general indicator or for informational purposes. 
+Always consult a qualified healthcare provider for medical decisions.
+````
 
 *   **AI Evaluation:** The main content area will show the rendered HTML reports from the LLM's JSON responses, displayed in an accordion format. Each report (final and interim) is an item in the accordion. The final report is expanded by default.
 *   **AI Usage Statistics:** After a successful analysis, a box will appear below the AI's response, showing detailed usage statistics for the session. This box is hidden until the analysis is complete. It includes:
@@ -433,13 +554,3 @@ A new section in Admin Tools allows you to monitor LLM usage in detail:
 *   **Prompt Settings (`POST /api/v1/ai_settings/prompts`):** Requires `admin:api:ai_settings:edit`. This permission string might need to be explicitly added to custom admin roles.
 *   **Usage Recording (`POST /api/v1/ai_usage/record`):** Called internally by `/ai_eval`. Currently uses `api:treatments:create` as a placeholder. For enhanced security, a dedicated system-level permission or internal authentication mechanism would be ideal if this endpoint were exposed more broadly.
 *   **Usage Summary (`GET /api/v1/ai_usage/monthly_summary`):** Currently uses `api:treatments:read`. Ideally, this would be a more specific `api:ai_usage:read` or an admin-level permission.
-
----
-This markdown file should provide a comprehensive overview for both users and developers.
-Please let me know if you'd like any sections expanded or clarified!
-
-
-## Reverted Commits:
-
-https://github.com/xannasavin/cgm-remote-monitor/commit/74d55b2b0b8e7545e218c6e21bb64e061f29b5dc
-https://github.com/xannasavin/cgm-remote-monitor/commit/d1a8cca9eb80d86afec2f51c56166fae06817258
