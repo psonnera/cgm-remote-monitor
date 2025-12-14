@@ -150,6 +150,25 @@ label {
   text-transform: uppercase;
 }
 
+.rp_nav_button {
+  background-color: #e0e0e0;
+  border: 1px solid #999;
+  color: #333;
+  padding: 10px 15px;
+  font-weight: bold;
+  font-size: 11pt;
+  cursor: pointer;
+  text-transform: uppercase;
+}
+
+.rp_nav_button:hover {
+  background-color: #d0d0d0;
+}
+
+.rp_nav_button:active {
+  background-color: #c0c0c0;
+}
+
 #filters_section summary {
   user-select: none;
   outline: none;
