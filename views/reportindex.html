@@ -52,29 +52,35 @@
           <a href="#" days="90" class="presetdates"><span class="translate">Last 3 months</span></a>
         </td>
       </tr>
-      <tr class="rp_foodgui" style="display:none">
-        <td></td>
-        <td>
-          <span class="translate">Category</span>: <select id="rp_category"></select>
-          <span class="translate">Subcategory</span>: <select id="rp_subcategory"></select>
-          <span class="translate">Name</span>: <input type="text" id="rp_name"></select>
-        </td>
-      </tr>
-      <tr class="rp_foodgui" style="display:none">
-        <td>
-          <input type="checkbox" id="rp_enablefood">
-        </td>
-        <td>
-          <span class="translate">Food</span>: <select id="rp_food"></select>
-        </td>
-      </tr>
-      <tr>
-        <td><input type="checkbox" id="rp_enablenotes"></td>
-        <td>
-          <span class="translate">Notes contain</span>: <input type="text" id="rp_notes"></select>
-        </td>
-      </tr>
-      <tr>
+    </table>
+
+    <details id="filters_section" style="margin-top: 15px;">
+      <summary style="cursor: pointer; font-weight: bold; font-size: 12pt; margin-bottom: 10px;">
+        <span class="translate">Filters</span>
+      </summary>
+      <table style="margin-left: 20px;">
+        <tr class="rp_foodgui" style="display:none">
+          <td></td>
+          <td>
+            <span class="translate">Category</span>: <select id="rp_category"></select>
+            <span class="translate">Subcategory</span>: <select id="rp_subcategory"></select>
+            <span class="translate">Name</span>: <input type="text" id="rp_name"></select>
+          </td>
+        </tr>
+        <tr class="rp_foodgui" style="display:none">
+          <td>
+            <input type="checkbox" id="rp_enablefood">
+          </td>
+          <td>
+            <span class="translate">Food</span>: <select id="rp_food"></select>
+          </td>
+        </tr>
+        <tr>
+          <td><input type="checkbox" id="rp_enablenotes"></td>
+          <td>
+            <span class="translate">Notes contain</span>: <input type="text" id="rp_notes"></select>
+          </td>
+        </tr>
         <tr>
           <td><input type="checkbox" id="rp_enableeventtype"></td>
           <td>
@@ -91,7 +97,6 @@
             <label><input type="checkbox" id="rp_sa" checked><span class="translate">Sa</span></label>
             <label><input type="checkbox" id="rp_su" checked><span class="translate">Su</span></label>
           </td>
-          <td></td>
         </tr>
         <tr>
           <td colspan="2">
@@ -100,7 +105,6 @@
             <span class="translate">top</span>:
             <input type="number" size="3" step="0.1" id="rp_targethigh">
           </td>
-          <td></td>
         </tr>
         <tr>
           <td colspan="2">
@@ -112,10 +116,40 @@
             <input type="radio" name="rp_sorting" id="rp_newestontop" checked>
             <label for="rp_newestontop" class="translate">newest on top</label>
           </td>
-          <td></td>
         </tr>
-      </tr>
-    </table>
+        <tr>
+          <td colspan="2">
+            <span class="translate">Filter by hours</span>:
+            <br>
+            <label><input type="checkbox" id="glucosedistribution-0" checked>0</label>
+            <label><input type="checkbox" id="glucosedistribution-1" checked>1</label>
+            <label><input type="checkbox" id="glucosedistribution-2" checked>2</label>
+            <label><input type="checkbox" id="glucosedistribution-3" checked>3</label>
+            <label><input type="checkbox" id="glucosedistribution-4" checked>4</label>
+            <label><input type="checkbox" id="glucosedistribution-5" checked>5</label>
+            <label><input type="checkbox" id="glucosedistribution-6" checked>6</label>
+            <label><input type="checkbox" id="glucosedistribution-7" checked>7</label>
+            <label><input type="checkbox" id="glucosedistribution-8" checked>8</label>
+            <label><input type="checkbox" id="glucosedistribution-9" checked>9</label>
+            <label><input type="checkbox" id="glucosedistribution-10" checked>10</label>
+            <label><input type="checkbox" id="glucosedistribution-11" checked>11</label>
+            <br>
+            <label><input type="checkbox" id="glucosedistribution-12" checked>12</label>
+            <label><input type="checkbox" id="glucosedistribution-13" checked>13</label>
+            <label><input type="checkbox" id="glucosedistribution-14" checked>14</label>
+            <label><input type="checkbox" id="glucosedistribution-15" checked>15</label>
+            <label><input type="checkbox" id="glucosedistribution-16" checked>16</label>
+            <label><input type="checkbox" id="glucosedistribution-17" checked>17</label>
+            <label><input type="checkbox" id="glucosedistribution-18" checked>18</label>
+            <label><input type="checkbox" id="glucosedistribution-19" checked>19</label>
+            <label><input type="checkbox" id="glucosedistribution-20" checked>20</label>
+            <label><input type="checkbox" id="glucosedistribution-21" checked>21</label>
+            <label><input type="checkbox" id="glucosedistribution-22" checked>22</label>
+            <label><input type="checkbox" id="glucosedistribution-23" checked>23</label>
+          </td>
+        </tr>
+      </table>
+    </details>
     <button id="rp_show" class="translate">Show</button>
     <div id="info"></div>
     <hr>
