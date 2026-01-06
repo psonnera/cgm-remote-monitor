@@ -204,7 +204,6 @@ Also if you can't code, it's possible to contribute by improving the documentati
 | [`ar2` (AR2 Forecasting)](README.md#ar2-ar2-forecasting)| Please volunteer | Please volunteer |
 | [`basal` (Basal Profile)](README.md#basal-basal-profile)| Please volunteer | Please volunteer |
 | [`boluscalc` (Bolus Wizard)](README.md#boluscalc-bolus-wizard)| Please volunteer | Please volunteer |
-| [`bridge` (Share2Nightscout bridge)](README.md#bridge-share2nightscout-bridge)| Please volunteer | Please volunteer |
 | [`bwp` (Bolus Wizard Preview)](README.md#bwp-bolus-wizard-preview)| Please volunteer | Please volunteer |
 | [`cage` (Cannula Age)](README.md#cage-cannula-age)| [@jpcunningh] | Please volunteer |
 | [`careportal` (Careportal)](README.md#careportal-careportal)| Please volunteer | Please volunteer |
@@ -219,7 +218,6 @@ Also if you can't code, it's possible to contribute by improving the documentati
 | [`iage` (Insulin Age)](README.md#iage-insulin-age)| Please volunteer | Please volunteer |
 | [`iob` (Insulin-on-Board)](README.md#iob-insulin-on-board)| Please volunteer | Please volunteer |
 | [`loop` (Loop)](README.md#loop-loop)| Please volunteer | Please volunteer |
-| [`mmconnect` (MiniMed Connect bridge)](README.md#mmconnect-minimed-connect-bridge)| Please volunteer | Please volunteer |
 | [`openaps` (OpenAPS)](README.md#openaps-openaps)| Please volunteer | Please volunteer |
 | [`profile` (Treatment Profile)](README.md#profile-treatment-profile)| Please volunteer | Please volunteer |
 | [`pump` (Pump Monitoring)](README.md#pump-pump-monitoring)| Please volunteer | Please volunteer |

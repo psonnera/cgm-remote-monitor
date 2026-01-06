@@ -82,21 +82,6 @@
       "value": "1",
       "required": false
     },
-    "BRIDGE_PASSWORD": {
-      "description": "Your Dexcom account password, to receive CGM data from the Dexcom Share service. Also make sure to include 'bridge' in your ENABLE line.",
-      "value": "",
-      "required": false
-    },
-    "BRIDGE_SERVER": {
-      "description": "If you are bridging from the Dexcom Share service, and are anywhere *outside* the US, change this to EU. ('US' or 'EU')",
-      "value": "US",
-      "required": false
-    },
-    "BRIDGE_USER_NAME": {
-      "description": "Your Dexcom account username, to receive CGM data from the Dexcom Share service. Also make sure to include 'bridge' in your ENABLE line.",
-      "value": "",
-      "required": false
-    },
     "CUSTOM_TITLE": {
       "description": "The display name for the Nightscout site. Appears in the upper left of the main view. Often set to the name of the CGM wearer.",
       "value": "",
@@ -108,23 +93,8 @@
       "required": true
     },
     "ENABLE": {
-      "description": "Plugins to enable for your site. Must be a space-delimited, lower-case list. Include the word 'bridge' here if you are receiving data from the Dexcom Share service. Include 'mmconnect' if you are bridging from the MiniMed CareLink service.",
+      "description": "Plugins to enable for your site. Must be a space-delimited, lower-case list.",
       "value": "careportal basal dbsize",
-      "required": false
-    },
-    "MMCONNECT_USER_NAME": {
-      "description": "Your CareLink account username, to receive CGM data from the CareLink service. Also make sure to include 'mmconnect' in your ENABLE line.",
-      "value": "",
-      "required": false
-    },
-    "MMCONNECT_PASSWORD": {
-      "description": "Your CareLink account password, to receive CGM data from the CareLink service. Also make sure to include 'mmconnect' in your ENABLE line.",
-      "value": "",
-      "required": false
-    },
-    "MMCONNECT_SERVER": {
-      "description": "If you are bridging from the CareLink service, and are anywhere *outside* the US, change this to EU. ('US' or 'EU')",
-      "value": "US",
       "required": false
     },
     "NIGHT_MODE": {
