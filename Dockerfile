@@ -2,6 +2,9 @@ FROM node:22-alpine
 
 LABEL maintainer="Nightscout Contributors"
 
+# Accept git commit hash as build argument
+ARG HEAD=unknown
+
 WORKDIR /opt/app
 ADD . /opt/app
 
@@ -16,6 +19,9 @@ RUN npm install --cache /tmp/empty-cache && \
   # Currently, doing this breaks the browser cache.
   # mkdir /tmp/public && \
   # chown node:node /tmp/public
+
+# Set the HEAD environment variable from build arg
+ENV HEAD=${HEAD}
 
 USER node
 EXPOSE 1337

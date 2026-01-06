@@ -5,8 +5,12 @@ const path = require('path');
 const { execSync } = require('child_process');
 
 try {
-  // Try to get git commit hash
-  const commit = execSync('git rev-parse HEAD', { encoding: 'utf8' }).trim();
+  let commit = process.env.HEAD; // Check if HEAD env var is set (Docker build)
+  
+  if (!commit) {
+    // Try to get git commit hash from git command
+    commit = execSync('git rev-parse HEAD', { encoding: 'utf8' }).trim();
+  }
   
   // Create the cache directory if it doesn't exist
   const cacheDir = path.join(__dirname, '..', 'node_modules', '.cache', '_ns_cache');
