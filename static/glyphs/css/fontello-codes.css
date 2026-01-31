@@ -21,3 +21,9 @@
 .icon-lock-open:before { content: '\e813'; } /* '' */
 .icon-trash-empty:before { content: '\e814'; } /* '' */
 .icon-back-in-time:before { content: '\e815'; } /* '' */
+.icon-down-circle:before { content: '\e816'; } /* '' */
+.icon-calendar:before { content: '\e817'; } /* '' */
+.icon-left-circled:before { content: '\e818'; } /* '' */
+.icon-right-circled:before { content: '\e819'; } /* '' */
+.icon-swimming:before { content: '\e838'; } /* '' */
+.icon-food:before { content: '\f0f5'; } /* '' */

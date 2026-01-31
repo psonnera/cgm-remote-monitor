@@ -1,7 +1,14 @@
 <div id="toolbar">
     <h1 class="customTitle">Nightscout</h1>
 
-    <%if (type !== 'index') { %>
+    <%if (type === 'retro') { %>
+        <div id="buttonbar" role="navigation" aria-label="Menu" >
+            <a id="retroButton" class="tip" original-title="Exit Retro Mode" aria-label="Exit Retro Mode" href="/" style="color: #ff4444; margin-right:10px;"><i class="icon-back-in-time"></i></a>
+            <a id="nextDay" class="tip" original-title="Next day" aria-label="Next Day" href="#"><i class="icon-right-circled"></i></a>
+            <a id="retroMenu" class="tip" original-title="Retro Browsing Menu" aria-label="Retro Browsing Menu" href="#"><i class="icon-calendar"></i></a>
+            <a id="prevDay" class="tip" original-title="Previous day" aria-label="Previous Day" href="#"><i class="icon-left-circled"></i></a>
+        </div>
+    <% } else if (type !== 'index') { %>
         <a href="/" class="closeButton button-close"><span>X</span></a>
     <% } %>
 
@@ -17,6 +24,7 @@
     <% } %>
     <%if (type === 'index') { %>
         <div id="buttonbar" role="navigation" aria-label="Menu" >
+            <a id="retroButton" class="tip" original-title="Retro Browsing" aria-label="Retro Browsing" href="/retro"><i class="icon-back-in-time"></i></a>
             <a id="boluscalcDrawerToggle" aria-label="Bolus Wizard" href="#" style="display:none;"><i class="icon-calc"></i></a>
             <a id="treatmentDrawerToggle" aria-label="Care Portal" href="#" style="display:none;"><i class="icon-plus"></i></a>
             <a id="lockedToggle" aria-label="Token needed for Care Portal" href="#" style="display:none;"><i class="icon-lock"></i></a>

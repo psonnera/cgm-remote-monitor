@@ -137,6 +137,42 @@
       "css": "back-in-time",
       "code": 59413,
       "src": "entypo"
+    },
+    {
+      "uid": "d368c9b110be1daa21f992afca084b8c",
+      "css": "swimming",
+      "code": 59448,
+      "src": "maki"
+    },
+    {
+      "uid": "30b79160618d99ce798e4bd11cafe3fe",
+      "css": "food",
+      "code": 61685,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "524f670504958d3e32ef887b99d8aca2",
+      "css": "down-circle",
+      "code": 59414,
+      "src": "iconic"
+    },
+    {
+      "uid": "531bc468eecbb8867d822f1c11f1e039",
+      "css": "calendar",
+      "code": 59415,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "a81de1d804430408892a8291b2372013",
+      "css": "left-circled",
+      "code": 59416,
+      "src": "elusive"
+    },
+    {
+      "uid": "4c84ab263a198ea543aff93843c5ce87",
+      "css": "right-circled",
+      "code": 59417,
+      "src": "elusive"
     }
   ]
 }

@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta name="viewport" content="width=device-width, maximum-scale=1, initial-scale=0.9, user-scalable=0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <link rel="apple-touch-startup-image" href="images/launch.png">
+  <meta name="apple-mobile-web-app-title" content="Nightscout Retro">
+
+  <title>Nightscout Retro Browsing</title>
+
+  <link rel="apple-touch-icon" sizes="57x57" href="images/apple-touch-icon-57x57.png">
+  <link rel="apple-touch-icon" sizes="60x60" href="images/apple-touch-icon-60x60.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="images/apple-touch-icon-76x76.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="images/apple-touch-icon-120x120.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="images/apple-touch-icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="images/apple-touch-icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="images/apple-touch-icon-180x180.png">
+  <link rel="icon" type="image/png" href="images/favicon-32x32.png" sizes="32x32">
+  <link rel="icon" type="image/png" href="images/android-chrome-192x192.png" sizes="192x192">
+  <link rel="icon" type="image/png" href="images/favicon-96x96.png" sizes="96x96">
+  <link rel="icon" type="image/png" href="images/favicon-16x16.png" sizes="16x16">
+  <link rel="manifest" href="manifest.json">
+  <link rel="shortcut icon" href="images/favicon.ico">
+  <meta name="msapplication-TileColor" content="#00a300">
+  <meta name="msapplication-TileImage" content="/images/mstile-144x144.png">
+  <meta name="msapplication-config" content="/browserconfig.xml">
+  <meta name="theme-color" content="#333333">
+  
+  <link rel="preload" href="css/ui-darkness/jquery-ui.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <link rel="preload" href="css/jquery.tooltips.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <link rel="preload" href="css/main.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <link rel="preload" href="css/drawer.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <link rel="preload" href="css/dropdown.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+
+  <link rel="preload" href="css/ui-darkness/jquery-ui.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <link rel="preload" href="css/jquery.tooltips.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <link rel="preload" href="css/main.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <link rel="preload" href="glyphs/css/fontello.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <link rel="preload" href="css/drawer.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <link rel="preload" href="css/dropdown.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <link rel="preload" href="css/sgv.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+
+  <style media="screen" type="text/css">
+    #centerMessagePanel {
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      height: 100%;
+      width: 100%;
+      margin: 0;
+      padding: 0;
+      background: #000000;
+      z-index: 1000;
+    }
+
+    #centerMessage {
+      position: relative;
+      margin: 20% auto;
+      padding: 20px;
+      background: #333;
+      border-radius: 5px;
+      max-width: 500px;
+      text-align: center;
+      color: white;
+    }
+
+    #loadingMessageText {
+      font-size: 20px;
+      margin-bottom: 10px;
+    }
+
+    #retroTitle {
+      display: none;
+    }
+
+    /* Main container uses flexbox */
+    .container {
+      display: flex !important;
+      flex-direction: column !important;
+      height: 100vh;
+      min-height: 100vh;
+      max-height: 100vh;
+      overflow: hidden;
+    }
+
+    #toolbar {
+      flex-shrink: 0;
+      min-height: 40px;
+      z-index: 100;
+    }
+
+    #toolbar .icon-back-in-time {
+      color: red !important;
+    }
+
+    #toolbar .icon-calendar {
+      color: white !important;
+    }
+
+    /* Tooltip positioning */
+    .tooltip {
+      position: absolute !important;
+      transform: translate(-100%, 0) !important;
+      margin-left: -5px !important;
+      max-width: 300px !important;
+      word-wrap: break-word !important;
+    }
+
+    /* Header area with status info - uses flexbox */
+    .header-info {
+      display: flex !important;
+      flex-direction: row !important;
+      justify-content: space-between !important;
+      align-items: flex-start !important;
+      flex-wrap: nowrap !important;
+      gap: 20px !important;
+      padding: 10px !important;
+      flex-shrink: 0;
+      flex-grow: 0;
+      z-index: 50;
+      overflow: visible;
+    }
+
+    .bgStatus {
+      flex: 0 1 auto !important;
+      min-width: 150px !important;
+      padding: 10px !important;
+      text-align: center !important;
+      float: none !important;
+      clear: none !important;
+      position: relative !important;
+    }
+
+    .bgButton {
+      display: inline-block;
+      position: relative;
+    }
+
+    .bgSpan {
+      display: inline-block;
+    }
+
+    .currentBG .arrow {
+      display: inline !important;
+      font-size: 90px !important;
+      line-height: 90px !important;
+      vertical-align: middle !important;
+      margin-left: 10px !important;
+      text-decoration: none !important;
+    }
+
+    .currentBG {
+      text-decoration: line-through !important;
+    }
+
+    .pill.direction {
+      display: inline-block !important;
+      vertical-align: middle !important;
+      margin-left: 10px !important;
+    }
+
+    #currentTime {
+      text-align: left !important;
+    }
+
+    .status {
+      flex: 1 1 auto !important;
+      min-width: 200px !important;
+      max-width: 60vw !important;
+      padding: 10px !important;
+      position: relative !important;
+      top: auto !important;
+      left: auto !important;
+      float: none !important;
+      clear: none !important;
+    }
+
+    @media (max-width: 768px) {
+      .header-info {
+        gap: 10px !important;
+      }
+      
+      .status {
+        max-width: none !important;
+        min-width: 150px !important;
+      }
+      
+      .bgStatus {
+        min-width: 120px !important;
+      }
+    }
+
+    @media (min-width: 1400px) {
+      .status {
+        max-width: 50vw !important;
+      }
+    }
+
+    .statusBox {
+      display: flex !important;
+      flex-direction: column !important;
+      gap: 10px !important;
+      width: 100% !important;
+    }
+
+    .statusPills {
+      display: flex !important;
+      flex-direction: row !important;
+      flex-wrap: wrap !important;
+      gap: 8px !important;
+      align-items: flex-start !important;
+      width: 100% !important;
+      justify-content: flex-start !important;
+    }
+
+    .statusPills .pill {
+      display: inline-block !important;
+      margin: 0 !important;
+      white-space: nowrap;
+      flex-shrink: 0 !important;
+    }
+
+    /* Chart container takes remaining space */
+    .primary {
+      flex: 1 1 0 !important;
+      position: relative;
+      overflow: hidden;
+      min-height: 0;
+      max-height: 100%;
+    }
+
+    #chartContainer {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 100% !important;
+      width: 100% !important;
+      overflow: hidden;
+    }
+
+    #chartContainer svg {
+      max-height: 100%;
+      max-width: 100%;
+    }
+  </style>
+
+  <noscript>
+    <h1 style="color:red;">
+      This site requires JavaScript.
+    </h1>
+  </noscript>
+
+  <%- include ('preloadCSS.ejs') %>
+
+</head>
+
+<body>
+  <div id="centerMessagePanel">
+    <div id="centerMessage">
+      <div id="loadingMessageText">Loading Retro Browsing...</div>
+    </div>
+  </div>
+
+  <!-- Hidden date picker -->
+  <input type="date" id="retroDateInput" style="position: absolute; visibility: hidden;">
+
+  <div class="container loading" id="container">
+    <%- include('partials/toolbar', {type: 'retro'}) %>
+    
+    <div class="header-info">
+      <div class="status">
+        <div class="statusBox">
+          <div id="currentTime">---</div>
+          <div class="statusPills"></div>
+        </div>
+      </div>
+
+      <div class="bgStatus current">
+        <div class="bgButton">
+          <span class="bgSpan">
+            <span class="currentBG">---</span>
+            <span class="pill direction"></span>
+          </span>
+        </div>
+        <div class="majorPills"></div>
+        <div class="minorPills"></div>
+      </div>
+    </div>
+
+    <div class="primary">
+      <div id="chartContainer"></div>
+    </div>
+  </div>
+
+  <audio class="audio alarms alarm" preload="auto" src="audio/<%= locals.cachebuster %>/alarm.mp3"></audio>
+  <audio class="audio alarms alarm2" preload="auto" src="audio/<%= locals.cachebuster %>/alarm2.mp3"></audio>
+
+  <script src="<%= locals.bundle %>/js/bundle.retro.js"></script>
+  <script src="socket.io/socket.io.js"></script>
+  <script src="js/retro-client.js"></script>
+
+</body>
+
+</html>

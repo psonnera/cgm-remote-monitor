@@ -283,6 +283,10 @@ h1, legend,
   width: 34px;
 }
 
+#buttonbar #retroButton {
+  float: left;
+}
+
 #buttonbar i {
   padding-left: 12px;
 }

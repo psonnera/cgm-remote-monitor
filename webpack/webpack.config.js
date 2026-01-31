@@ -122,6 +122,7 @@ const rules = [
 
 const appEntry = ['./bundle/bundle.source.js'];
 const clockEntry = ['./bundle/bundle.clocks.source.js'];
+const retroEntry = ['./bundle/bundle.retro.source.js'];
 
 let mode = 'production';
 let publicPath = '/bundle/';
@@ -136,6 +137,7 @@ if (process.env.NODE_ENV === 'development') {
 
   appEntry.unshift(hot);
   clockEntry.unshift(hot);
+  retroEntry.unshift(hot);
 }
 
 const optimization = {};
@@ -146,7 +148,8 @@ module.exports = {
   context: projectRoot,
   entry: {
     app: appEntry,
-    clock: clockEntry
+    clock: clockEntry,
+    retro: retroEntry
   },
   output: {
     path: path.resolve(projectRoot, './node_modules/.cache/_ns_cache/public'),
