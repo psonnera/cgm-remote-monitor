@@ -42,7 +42,7 @@ describe('env', function () {
     delete process.env.PUSHOVER_API_TOKEN;
   } );
 
-  it( 'add pushover to enable if one of the weird azure env vars is set', function () {
+  ...existing code...
     process.env.CUSTOMCONNSTR_PUSHOVER_API_TOKEN = 'abc12345';
 
     var env = require( '../lib/server/env' )();

@@ -62,7 +62,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md)
   - [Recommended minimum browser versions for using Nightscout:](#recommended-minimum-browser-versions-for-using-nightscout)
   - [Windows installation software requirements:](#windows-installation-software-requirements)
   - [Installation notes for users with nginx or Apache reverse proxy for SSL/TLS offloading:](#installation-notes-for-users-with-nginx-or-apache-reverse-proxy-for-ssltls-offloading)
-  - [Installation notes for Microsoft Azure, Windows:](#installation-notes-for-microsoft-azure-windows)
+  ...existing code...
 - [Development](#development)
 - [Usage](#usage)
   - [Updating my version?](#updating-my-version)
@@ -170,11 +170,8 @@ $ npm install
 - HTTP Strict Transport Security (HSTS) headers are enabled by default, use settings `SECURE_HSTS_HEADER` and `SECURE_HSTS_HEADER_*`
 - See [Predefined values for your server settings](#predefined-values-for-your-server-settings-optional) for more details
 
-## Installation notes for Microsoft Azure, Windows:
 
-### Microsoft Azure Deployment
-
-The recommended Nightscout deployment method for Azure uses Docker containers rather than running Node.js directly. Follow the [Nightscout Azure deployment guide](https://nightscout.github.io/nightscout/new_user/) for container-based setup instructions.
+...existing code...
 
 ### Local Windows Installation with Node.js
 
