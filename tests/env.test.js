@@ -42,7 +42,15 @@ describe('env', function () {
     delete process.env.PUSHOVER_API_TOKEN;
   } );
 
-  ...existing code...
+  it( 'add pushover to enable if one of the env vars is set', function () {
+    process.env.PUSHOVER_API_TOKEN = 'abc12345';
+
+    var env = require( '../lib/server/env' )();
+    env.settings.enable.should.containEql( 'pushover' );
+    env.extendedSettings.pushover.apiToken.should.equal( 'abc12345' );
+
+    delete process.env.PUSHOVER_API_TOKEN;
+  } );
     process.env.CUSTOMCONNSTR_PUSHOVER_API_TOKEN = 'abc12345';
 
     var env = require( '../lib/server/env' )();
