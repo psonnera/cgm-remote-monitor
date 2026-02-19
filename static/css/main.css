@@ -293,6 +293,23 @@ a, a:visited, a:link {
   color: #bdbdbd;
 }
 
+.statusPills .pill.openaps.openaps-status-enacted,
+.statusPills .pill.openaps.openaps-status-looping {
+  border-color: #0bb116;
+  background: #0bb116;
+}
+
+.statusPills .pill.openaps.openaps-status-waiting {
+  border-color: #808080;
+  background: #808080;
+}
+
+.statusPills .pill.openaps.openaps-status-warning,
+.statusPills .pill.openaps.openaps-status-notenacted {
+  border-color: #d00f0f;
+  background: #d00f0f;
+}
+
 #chartContainer {
   left: 0;
   right: 0;
