@@ -234,6 +234,22 @@ a, a:visited, a:link {
   color: #000;
 }
 
+/* Pump status pill colors - border/background only, text stays default */
+.container .pill.pump-normal {
+  border-color: #0bb116;
+  background: #0bb116;
+}
+
+.container .pill.pump-bolusing {
+  border-color: #00BFFF;
+  background: #00BFFF;
+}
+
+.container .pill.pump-suspended {
+  border-color: yellow;
+  background: yellow;
+}
+
 .container .pill.warn em {
   color: yellow;
 }
