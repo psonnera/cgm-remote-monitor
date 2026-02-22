@@ -98,7 +98,7 @@
     "file-loader": "^6.2.0",
     "flot": "^0.8.3",
     "forwarded-for": "^1.1.0",
-    "helmet": "^4.0.0",
+    "helmet": "^8.1.0",
     "jquery": "^3.5.1",
     "jquery-ui-bundle": "^1.12.1-migrate",
     "jquery.tooltips": "^1.0.0",
