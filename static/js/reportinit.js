@@ -36,43 +36,13 @@ $(document).ready(function() {
 		// Optionally update date fields here
 	});
 
-	// On page load, mark the default selected preset date
-	function markDefaultPreset() {
-		var days = 31; // Default to 1 month
-		var found = false;
-		$('.presetdates').each(function() {
-			if ($(this).attr('days') == days) {
-				$(this).addClass('selected');
-				found = true;
-			}
-		});
-		if (!found) {
-			$('.presetdates').first().addClass('selected');
-		}
-	}
-	markDefaultPreset();
+	// On page load, AGP uses previous calendar month (not a preset)
+	// So no preset button should be selected initially
+	// Preset selection is handled when user clicks a preset or switches reports
 
-	// Trigger SHOW button on plugin tab selection
-	$('#tabnav').on('click', '.menutab', function() {
-		$('#tabnav > li').removeClass('selected');
-		$(this).addClass('selected');
-		// Hide all plugin placeholders
-		$('.tabplaceholder').css('display', 'none');
-		// Show selected plugin placeholder
-		$('#' + $(this).attr('id') + '-placeholder').css('display', '');
-		// Trigger report load
-		$('#rp_show').prop('disabled', false).show().click();
-	});
+	// Tab click handling is done by switchreport_handler in reportclient.js
+	// Removed duplicate handler that was causing double show() calls
 
-	// Force AGP Report to be the default report on page load
-	setTimeout(function() {
-		var agpTab = $('#tabnav > li#glucosedistribution');
-		if (agpTab.length) {
-			$('#tabnav > li').removeClass('selected');
-			agpTab.addClass('selected');
-			$('.tabplaceholder').css('display', 'none');
-			$('#glucosedistribution-placeholder').css('display', '');
-			$('#rp_show').prop('disabled', false).show().click();
-		}
-	}, 100);
+	// AGP Report tab selection is handled by reportclient.js
+	// Removed duplicate initialization that was causing double data loading
 });

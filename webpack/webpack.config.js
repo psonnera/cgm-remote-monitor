@@ -166,7 +166,8 @@ module.exports = {
   resolve: {
     fallback: {
       'process/browser': require.resolve('process/browser'),
-      events: require.resolve('events/')
+      events: require.resolve('events/'),
+      vm: require.resolve('vm-browserify')
     },
     alias: {
       stream: 'stream-browserify',
