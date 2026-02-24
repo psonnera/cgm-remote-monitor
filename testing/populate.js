@@ -9,7 +9,7 @@ main();
 
 function main() {
   var MongoClient = mongodb.MongoClient;
-  MongoClient.connect(env.storageURI, { "useUnifiedTopology" : true, "useNewUrlParser" : true }, function connected(err, client) {
+  MongoClient.connect(env.storageURI, {}, function connected(err, client) {
 
     console.log('Connecting to mongo...');
     if (err) {
@@ -27,7 +27,7 @@ function populate_collection(db) {
   var cgm_collection = db.collection(env.entries_collection);
   var new_cgm_record = util.get_cgm_record();
 
-  cgm_collection.insert(new_cgm_record, function (err) {
+  cgm_collection.insertOne(new_cgm_record, function (err) {
     if (err) {
       throw err;
     }

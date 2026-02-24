@@ -113,7 +113,7 @@
     "moment-timezone": "^0.6.0",
     "moment-timezone-data-webpack-plugin": "^1.5.0",
     "mongo-url-parser": "^1.0.2",
-    "mongodb": "^3.6.0",
+    "mongodb": "^4.17.2",
     "mongomock": "^0.1.2",
     "nightscout-connect": "github:psonnera/nightscout-connect",
     "node-cache": "^5.1.2",
