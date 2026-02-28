@@ -11,7 +11,7 @@ describe('API3 output renderers', function() {
     , opTools = require('../lib/api3/shared/operationTools')
     , _ = require('lodash')
     , xml2js = require('xml2js')
-    , csvParse = require('csv-parse/lib/sync')
+    , csvParse = require('csv-parse/sync').parse
     ;
 
   self.historyFrom = (new Date()).getTime() - 1000; // starting timestamp for HISTORY operations

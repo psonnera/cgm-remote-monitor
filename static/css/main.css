@@ -250,6 +250,11 @@ a, a:visited, a:link {
   background: yellow;
 }
 
+.container .pill.pump-disabled {
+  border-color: #d00f0f;
+  background: #d00f0f;
+}
+
 .container .pill.warn em {
   color: yellow;
 }
