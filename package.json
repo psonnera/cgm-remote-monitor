@@ -116,7 +116,7 @@
     "mongo-url-parser": "^1.0.2",
     "mongodb": "^4.17.2",
     "mongomock": "^0.1.2",
-    "nightscout-connect": "github:psonnera/nightscout-connect",
+    "nightscout-connect": "github:psonnera/nightscout-connect#bun",
     "node-cache": "^5.1.2",
     "parse-duration": "2.1.5",
     "process": "^0.11.10",
