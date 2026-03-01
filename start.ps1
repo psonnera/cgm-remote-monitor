@@ -8,4 +8,4 @@ Get-Content .env | ForEach-Object {
 }
 
 # Start Nightscout
-node lib/server/server.js
+bun lib/server/server.js

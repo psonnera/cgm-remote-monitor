@@ -1,1 +1,1 @@
-web: node lib/server/server.js
+web: bun lib/server/server.js
