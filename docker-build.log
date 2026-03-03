@@ -1,0 +1,213 @@
+#0 building with "desktop-linux" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 1.91kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/oven/bun:latest
+#2 DONE 0.4s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 307B done
+#3 DONE 0.0s
+
+#4 [1/9] FROM docker.io/oven/bun:latest@sha256:b86c67b531d87b4db11470d9b2bd0c519b1976eee6fcd71634e73abfa6230d2e
+#4 DONE 0.0s
+
+#5 [2/9] WORKDIR /opt/app
+#5 CACHED
+
+#6 [internal] load build context
+#6 transferring context: 31.68kB 0.0s done
+#6 DONE 0.0s
+
+#7 [3/9] ADD . /opt/app
+#7 DONE 0.2s
+
+#8 [4/9] RUN bun install
+#8 0.257 bun install v1.3.10 (30e609e0)
+#8 5.260 
+#8 5.260 $ webpack --mode production --config webpack/webpack.config.js && bun run post-generate-keys
+#8 7.674 [BABEL] Note: The code generator has deoptimised the styling of /opt/app/node_modules/jquery-ui-bundle/jquery-ui.js as it exceeds the max of 500KB.
+#8 7.966 [BABEL] Note: The code generator has deoptimised the styling of /opt/app/node_modules/lodash/lodash.js as it exceeds the max of 500KB.
+#8 35.93 $ mkdir -p node_modules/.cache/_ns_cache && bun bin/generateRandomString.js >node_modules/.cache/_ns_cache/randomString && bun bin/generateGitCommit.js
+#8 35.98 Git commit hash saved: b90e5c58c
+#8 35.99 
+#8 35.99 + @types/tough-cookie@4.0.5
+#8 35.99 + babel-eslint@10.1.0
+#8 35.99 + babel-loader@10.0.0
+#8 35.99 + benv@3.3.0
+#8 35.99 + csv-parse@6.1.0
+#8 35.99 + env-cmd@10.1.0
+#8 35.99 + eslint@8.57.1
+#8 35.99 + eslint-plugin-security@1.7.1
+#8 35.99 + eslint-webpack-plugin@5.0.2
+#8 35.99 + mocha@11.7.5
+#8 35.99 + nodemon@3.1.14
+#8 35.99 + nyc@18.0.0
+#8 35.99 + should@13.2.3
+#8 35.99 + supertest@7.2.2
+#8 35.99 + vm-browserify@1.1.2
+#8 35.99 + webpack-bundle-analyzer@5.2.0
+#8 35.99 + webpack-dev-middleware@7.4.5
+#8 35.99 + webpack-hot-middleware@2.26.1
+#8 35.99 + xml2js@0.6.2
+#8 35.99 + @babel/core@7.29.0
+#8 35.99 + @babel/preset-env@7.29.0
+#8 35.99 + @parse/node-apn@7.1.0
+#8 35.99 + acorn@8.16.0
+#8 35.99 + acorn-jsx@5.3.2
+#8 35.99 + async@0.9.2
+#8 35.99 + axios@1.13.5
+#8 35.99 + body-parser@1.20.4
+#8 35.99 + bootevent@0.0.1
+#8 35.99 + braces@3.0.3
+#8 35.99 + buffer@6.0.3
+#8 35.99 + compression@1.8.1
+#8 35.99 + crypto-browserify@3.12.1
+#8 35.99 + css-loader@7.1.4
+#8 35.99 + cssmin@0.4.3
+#8 35.99 + csv-stringify@6.6.0
+#8 35.99 + d3@7.9.0
+#8 35.99 + dompurify@3.3.1
+#8 35.99 + easyxml@2.0.1
+#8 35.99 + ejs@3.1.10
+#8 35.99 + errorhandler@1.5.2
+#8 35.99 + event-stream@3.3.4
+#8 35.99 + expose-loader@5.0.1
+#8 35.99 + express@4.22.1
+#8 35.99 + express-minify@1.0.0
+#8 35.99 + fast-password-entropy@1.1.1
+#8 35.99 + file-loader@6.2.0
+#8 35.99 + flot@0.8.3
+#8 35.99 + forwarded-for@1.1.0
+#8 35.99 + helmet@8.1.0
+#8 35.99 + jquery@3.7.1
+#8 35.99 + jquery-ui-bundle@1.12.1-migrate
+#8 35.99 + jquery.tooltips@1.0.0
+#8 35.99 + js-storage@1.1.0
+#8 35.99 + jsdom@28.1.0
+#8 35.99 + jsonwebtoken@9.0.3
+#8 35.99 + lodash@4.17.23
+#8 35.99 + memory-cache@0.2.0
+#8 35.99 + mime@2.6.0
+#8 35.99 + moment@2.30.1
+#8 35.99 + moment-locales-webpack-plugin@1.2.0
+#8 35.99 + moment-timezone@0.6.0
+#8 35.99 + moment-timezone-data-webpack-plugin@1.5.1
+#8 35.99 + mongo-url-parser@1.0.2
+#8 35.99 + mongodb@4.17.2
+#8 35.99 + mongomock@0.1.2
+#8 35.99 + nightscout-connect@github:psonnera/nightscout-connect#60875f5
+#8 35.99 + node-cache@5.1.2
+#8 35.99 + parse-duration@2.1.5
+#8 35.99 + process@0.11.10
+#8 35.99 + pushover-notifications@1.2.3
+#8 35.99 + random-token@0.0.8
+#8 35.99 + semver@7.7.4
+#8 35.99 + shiro-trie@0.4.10
+#8 35.99 + simple-statistics@7.8.8
+#8 35.99 + socket.io@4.8.3
+#8 35.99 + socket.io-client@4.8.3
+#8 35.99 + stream-browserify@3.0.0
+#8 35.99 + style-loader@4.0.0
+#8 35.99 + swagger-ui-dist@5.31.2
+#8 35.99 + swagger-ui-express@5.0.1
+#8 35.99 + traverse@0.6.11
+#8 35.99 + uuid@13.0.0
+#8 35.99 + webpack@5.105.2
+#8 35.99 + webpack-cli@4.10.0
+#8 35.99 
+#8 35.99 1009 packages installed [35.73s]
+#8 DONE 36.7s
+
+#9 [5/9] RUN mkdir -p node_modules/.cache/_ns_cache/public/js
+#9 DONE 0.3s
+
+#10 [6/9] RUN echo "=== Starting Webpack Build ===" &&   bun run bundle 2>&1 > /tmp/webpack-build.log ;   WEBPACK_EXIT=$?;   echo "Webpack exit code: $WEBPACK_EXIT" &&   echo "=== First 50 lines of webpack output ===" &&   head -50 /tmp/webpack-build.log &&   echo "..." &&   echo "=== Last 50 lines of webpack output ===" &&   tail -50 /tmp/webpack-build.log
+#10 0.289 === Starting Webpack Build ===
+#10 0.293 $ webpack --mode production --config webpack/webpack.config.js && bun run post-generate-keys
+#10 21.73 $ mkdir -p node_modules/.cache/_ns_cache && bun bin/generateRandomString.js >node_modules/.cache/_ns_cache/randomString && bun bin/generateGitCommit.js
+#10 21.79 Webpack exit code: 0
+#10 21.79 === First 50 lines of webpack output ===
+#10 21.79 Git commit hash saved: b90e5c58c
+#10 21.79 ...
+#10 21.79 === Last 50 lines of webpack output ===
+#10 21.79 Git commit hash saved: b90e5c58c
+#10 DONE 21.8s
+
+#11 [7/9] RUN echo "" && echo "=== Checking output directory ===" &&   ls -lR node_modules/.cache/_ns_cache/public/ 2>&1 || echo "Directory check failed"
+#11 0.237 
+#11 0.237 === Checking output directory ===
+#11 0.239 node_modules/.cache/_ns_cache/public/:
+#11 0.239 total 4
+#11 0.239 drwxr-xr-x 2 root root 4096 Mar  1 21:29 js
+#11 0.239 
+#11 0.239 node_modules/.cache/_ns_cache/public/js:
+#11 0.239 total 0
+#11 DONE 0.3s
+
+#12 [8/9] RUN echo "=== Verifying bundle files ===" &&   if [ -f node_modules/.cache/_ns_cache/public/js/bundle.app.js ]; then     echo "Ô£ô bundle.app.js exists ($(wc -c < node_modules/.cache/_ns_cache/public/js/bundle.app.js) bytes)";   else     echo "Ô£ù ERROR: bundle.app.js not found!";     ls -la node_modules/.cache/_ns_cache/public/ 2>/dev/null || echo "Cache directory is empty";     exit 1;   fi &&   echo "=== Bundle verification complete ==="
+#12 0.321 === Verifying bundle files ===
+#12 0.321 Ô£ù ERROR: bundle.app.js not found!
+#12 0.322 total 16
+#12 0.322 drwxr-xr-x 3 root root 4096 Mar  1 21:29 .
+#12 0.322 drwxrwxrwx 1 root root 4096 Mar  1 21:29 ..
+#12 0.322 drwxr-xr-x 2 root root 4096 Mar  1 21:29 js
+#12 ERROR: process "/bin/sh -c echo \"=== Verifying bundle files ===\" &&   if [ -f node_modules/.cache/_ns_cache/public/js/bundle.app.js ]; then     echo \"Ô£ô bundle.app.js exists ($(wc -c < node_modules/.cache/_ns_cache/public/js/bundle.app.js) bytes)\";   else     echo \"Ô£ù ERROR: bundle.app.js not found!\";     ls -la node_modules/.cache/_ns_cache/public/ 2>/dev/null || echo \"Cache directory is empty\";     exit 1;   fi &&   echo \"=== Bundle verification complete ===\"" did not complete successfully: exit code: 1
+------
+ > [8/9] RUN echo "=== Verifying bundle files ===" &&   if [ -f node_modules/.cache/_ns_cache/public/js/bundle.app.js ]; then     echo "Ô£ô bundle.app.js exists ($(wc -c < node_modules/.cache/_ns_cache/public/js/bundle.app.js) bytes)";   else     echo "Ô£ù ERROR: bundle.app.js not found!";     ls -la node_modules/.cache/_ns_cache/public/ 2>/dev/null || echo "Cache directory is empty";     exit 1;   fi &&   echo "=== Bundle verification complete ===":
+0.321 === Verifying bundle files ===
+0.321 Ô£ù ERROR: bundle.app.js not found!
+0.322 total 16
+0.322 drwxr-xr-x 3 root root 4096 Mar  1 21:29 .
+0.322 drwxrwxrwx 1 root root 4096 Mar  1 21:29 ..
+0.322 drwxr-xr-x 2 root root 4096 Mar  1 21:29 js
+------
+Dockerfile:35
+--------------------
+  34 |     # Verify bundle files exist
+  35 | >>> RUN echo "=== Verifying bundle files ===" && \
+  36 | >>>   if [ -f node_modules/.cache/_ns_cache/public/js/bundle.app.js ]; then \
+  37 | >>>     echo "Ô£ô bundle.app.js exists ($(wc -c < node_modules/.cache/_ns_cache/public/js/bundle.app.js) bytes)"; \
+  38 | >>>   else \
+  39 | >>>     echo "Ô£ù ERROR: bundle.app.js not found!"; \
+  40 | >>>     ls -la node_modules/.cache/_ns_cache/public/ 2>/dev/null || echo "Cache directory is empty"; \
+  41 | >>>     exit 1; \
+  42 | >>>   fi && \
+  43 | >>>   echo "=== Bundle verification complete ==="
+  44 |     
+--------------------
+ERROR: failed to build: failed to solve: process "/bin/sh -c echo \"=== Verifying bundle files ===\" &&   if [ -f node_modules/.cache/_ns_cache/public/js/bundle.app.js ]; then     echo \"Ô£ô bundle.app.js exists ($(wc -c < node_modules/.cache/_ns_cache/public/js/bundle.app.js) bytes)\";   else     echo \"Ô£ù ERROR: bundle.app.js not found!\";     ls -la node_modules/.cache/_ns_cache/public/ 2>/dev/null || echo \"Cache directory is empty\";     exit 1;   fi &&   echo \"=== Bundle verification complete ===\"" did not complete successfully: exit code: 1
+
+View build details: docker-desktop://dashboard/build/desktop-linux/desktop-linux/9i2pa5xexhu3nyoh3ag3gr5vj
+The push refers to repository [docker.io/psonnera/cgm-remote-monitor]
+f2410db5513e: Preparing
+5188a0a3f38d: Preparing
+51604050e7b7: Preparing
+c970dd1a53b9: Preparing
+aeedace008ad: Preparing
+4076765f51a4: Preparing
+fe419bb1c896: Preparing
+5e6b8e4043ee: Preparing
+56e3b5ec0551: Preparing
+ecc990dbfd7e: Preparing
+a541a5ccaa30: Preparing
+4076765f51a4: Waiting
+fe419bb1c896: Waiting
+5e6b8e4043ee: Waiting
+56e3b5ec0551: Waiting
+ecc990dbfd7e: Waiting
+a541a5ccaa30: Waiting
+5188a0a3f38d: Layer already exists
+f2410db5513e: Layer already exists
+c970dd1a53b9: Layer already exists
+51604050e7b7: Layer already exists
+aeedace008ad: Layer already exists
+4076765f51a4: Layer already exists
+fe419bb1c896: Layer already exists
+5e6b8e4043ee: Layer already exists
+ecc990dbfd7e: Layer already exists
+56e3b5ec0551: Layer already exists
+a541a5ccaa30: Layer already exists
+dev-AAPS-Bun: digest: sha256:d264779599edb63dc325eba30ecd07bcd8d048b6abedbc3bee081f39498fe736 size: 2614

@@ -1,0 +1,171 @@
+#0 building with "desktop-linux" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 1.38kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/oven/bun:latest
+#2 DONE 0.4s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 307B done
+#3 DONE 0.0s
+
+#4 [1/7] FROM docker.io/oven/bun:latest@sha256:b86c67b531d87b4db11470d9b2bd0c519b1976eee6fcd71634e73abfa6230d2e
+#4 DONE 0.0s
+
+#5 [2/7] WORKDIR /opt/app
+#5 CACHED
+
+#6 [internal] load build context
+#6 transferring context: 49.67kB 0.0s done
+#6 DONE 0.0s
+
+#7 [3/7] ADD . /opt/app
+#7 DONE 0.2s
+
+#8 [4/7] RUN bun install --ignore-scripts &&   echo "Packages installed (webpack postinstall skipped)"
+#8 0.260 bun install v1.3.10 (30e609e0)
+#8 2.169 
+#8 2.169 + @types/tough-cookie@4.0.5
+#8 2.169 + babel-eslint@10.1.0
+#8 2.169 + babel-loader@10.0.0
+#8 2.169 + benv@3.3.0
+#8 2.169 + csv-parse@6.1.0
+#8 2.169 + env-cmd@10.1.0
+#8 2.169 + eslint@8.57.1
+#8 2.169 + eslint-plugin-security@1.7.1
+#8 2.169 + eslint-webpack-plugin@5.0.2
+#8 2.169 + mocha@11.7.5
+#8 2.169 + nodemon@3.1.14
+#8 2.169 + nyc@18.0.0
+#8 2.169 + should@13.2.3
+#8 2.169 + supertest@7.2.2
+#8 2.169 + vm-browserify@1.1.2
+#8 2.169 + webpack-bundle-analyzer@5.2.0
+#8 2.169 + webpack-dev-middleware@7.4.5
+#8 2.169 + webpack-hot-middleware@2.26.1
+#8 2.169 + xml2js@0.6.2
+#8 2.169 + @babel/core@7.29.0
+#8 2.169 + @babel/preset-env@7.29.0
+#8 2.169 + @parse/node-apn@7.1.0
+#8 2.169 + acorn@8.16.0
+#8 2.169 + acorn-jsx@5.3.2
+#8 2.169 + async@0.9.2
+#8 2.169 + axios@1.13.5
+#8 2.169 + body-parser@1.20.4
+#8 2.169 + bootevent@0.0.1
+#8 2.169 + braces@3.0.3
+#8 2.169 + buffer@6.0.3
+#8 2.169 + compression@1.8.1
+#8 2.169 + crypto-browserify@3.12.1
+#8 2.169 + css-loader@7.1.4
+#8 2.169 + cssmin@0.4.3
+#8 2.169 + csv-stringify@6.6.0
+#8 2.169 + d3@7.9.0
+#8 2.169 + dompurify@3.3.1
+#8 2.169 + easyxml@2.0.1
+#8 2.169 + ejs@3.1.10
+#8 2.169 + errorhandler@1.5.2
+#8 2.169 + event-stream@3.3.4
+#8 2.169 + expose-loader@5.0.1
+#8 2.169 + express@4.22.1
+#8 2.169 + express-minify@1.0.0
+#8 2.169 + fast-password-entropy@1.1.1
+#8 2.169 + file-loader@6.2.0
+#8 2.169 + flot@0.8.3
+#8 2.169 + forwarded-for@1.1.0
+#8 2.169 + helmet@8.1.0
+#8 2.169 + jquery@3.7.1
+#8 2.169 + jquery-ui-bundle@1.12.1-migrate
+#8 2.169 + jquery.tooltips@1.0.0
+#8 2.169 + js-storage@1.1.0
+#8 2.169 + jsdom@28.1.0
+#8 2.169 + jsonwebtoken@9.0.3
+#8 2.169 + lodash@4.17.23
+#8 2.169 + memory-cache@0.2.0
+#8 2.169 + mime@2.6.0
+#8 2.169 + moment@2.30.1
+#8 2.169 + moment-locales-webpack-plugin@1.2.0
+#8 2.169 + moment-timezone@0.6.0
+#8 2.169 + moment-timezone-data-webpack-plugin@1.5.1
+#8 2.169 + mongo-url-parser@1.0.2
+#8 2.169 + mongodb@4.17.2
+#8 2.169 + mongomock@0.1.2
+#8 2.169 + nightscout-connect@github:psonnera/nightscout-connect#60875f5
+#8 2.169 + node-cache@5.1.2
+#8 2.169 + parse-duration@2.1.5
+#8 2.169 + process@0.11.10
+#8 2.169 + pushover-notifications@1.2.3
+#8 2.169 + random-token@0.0.8
+#8 2.169 + semver@7.7.4
+#8 2.169 + shiro-trie@0.4.10
+#8 2.169 + simple-statistics@7.8.8
+#8 2.169 + socket.io@4.8.3
+#8 2.169 + socket.io-client@4.8.3
+#8 2.169 + stream-browserify@3.0.0
+#8 2.169 + style-loader@4.0.0
+#8 2.169 + swagger-ui-dist@5.31.2
+#8 2.169 + swagger-ui-express@5.0.1
+#8 2.169 + traverse@0.6.11
+#8 2.169 + uuid@13.0.0
+#8 2.169 + webpack@5.105.2
+#8 2.169 + webpack-cli@4.10.0
+#8 2.169 
+#8 2.169 1009 packages installed [1.91s]
+#8 2.189 Packages installed (webpack postinstall skipped)
+#8 DONE 2.8s
+
+#9 [5/7] RUN if [ -d node_modules/.cache/_ns_cache/public/js ] && [ -f node_modules/.cache/_ns_cache/public/js/bundle.app.js ]; then     echo "Ô£ô Using pre-built webpack bundles";   else     echo "ÔÜá Creating empty bundle directory (bundles will be generated at runtime if needed)";     mkdir -p node_modules/.cache/_ns_cache/public/js;   fi
+#9 0.234 ÔÜá Creating empty bundle directory (bundles will be generated at runtime if needed)
+#9 DONE 0.3s
+
+#10 [6/7] RUN mkdir -p node_modules/.cache/_ns_cache &&   bun bin/generateRandomString.js > node_modules/.cache/_ns_cache/randomString &&   bun bin/generateGitCommit.js &&   echo "Keys generated"
+#10 0.824 Git commit hash saved: b90e5c58c
+#10 0.829 Keys generated
+#10 DONE 0.8s
+
+#11 [7/7] RUN rm -rf /tmp/*
+#11 DONE 0.4s
+
+#12 exporting to image
+#12 exporting layers
+#12 exporting layers 6.6s done
+#12 writing image sha256:1324098b0e0b9209ef0f1298f2976e62b080e4bcae5a510c85d55c03b3f5baf7 done
+#12 naming to docker.io/psonnera/cgm-remote-monitor:dev-AAPS-Bun done
+#12 DONE 6.6s
+
+View build details: docker-desktop://dashboard/build/desktop-linux/desktop-linux/j7rygvx8ugfasf0dr8aklpodq
+The push refers to repository [docker.io/psonnera/cgm-remote-monitor]
+b812b065a052: Preparing
+c42acb92659c: Preparing
+20761a318c1c: Preparing
+cb419059e07f: Preparing
+0652304e8c5d: Preparing
+aeedace008ad: Preparing
+4076765f51a4: Preparing
+fe419bb1c896: Preparing
+5e6b8e4043ee: Preparing
+56e3b5ec0551: Preparing
+ecc990dbfd7e: Preparing
+a541a5ccaa30: Preparing
+aeedace008ad: Waiting
+4076765f51a4: Waiting
+fe419bb1c896: Waiting
+5e6b8e4043ee: Waiting
+56e3b5ec0551: Waiting
+ecc990dbfd7e: Waiting
+a541a5ccaa30: Waiting
+b812b065a052: Pushed
+20761a318c1c: Pushed
+c42acb92659c: Pushed
+aeedace008ad: Layer already exists
+4076765f51a4: Layer already exists
+fe419bb1c896: Layer already exists
+5e6b8e4043ee: Layer already exists
+56e3b5ec0551: Layer already exists
+ecc990dbfd7e: Layer already exists
+0652304e8c5d: Pushed
+a541a5ccaa30: Layer already exists
+cb419059e07f: Pushed
+dev-AAPS-Bun: digest: sha256:f1363ccda833f8384676b178a01cbd88a79c765ae810224a31104df63d2c0a61 size: 2821
