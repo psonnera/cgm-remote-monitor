@@ -1,6 +1,6 @@
 {
   "name": "nightscout",
-  "version": "15.1.2",
+  "version": "15.2.0",
   "description": "Nightscout acts as a web-based CGM (Continuous Glucose Montinor) to allow multiple caregivers to remotely view a patients glucose data in realtime.",
   "license": "AGPL-3.0",
   "author": "Nightscout Team",
@@ -26,20 +26,20 @@
     "url": "https://github.com/nightscout/cgm-remote-monitor/issues"
   },
   "scripts": {
-    "start": "node lib/server/server.js",
+    "start": "bun lib/server/server.js",
     "test": "env-cmd -f ./my.test.env mocha --timeout 5000 --require ./tests/hooks.js -exit ./tests/*.test.js",
     "test-single": "env-cmd -f ./my.test.env mocha --timeout 5000 --require ./tests/hooks.js --exit ./tests/$TEST.test.js",
     "test-ci": "env-cmd -f ./tests/ci.test.env nyc --reporter=lcov --reporter=text-summary mocha --timeout 5000 --require ./tests/hooks.js --exit ./tests/*.test.js",
     "env": "env",
-    "postinstall": "webpack --mode production --config webpack/webpack.config.js && npm run-script post-generate-keys",
-    "bundle": "webpack --mode production --config webpack/webpack.config.js && npm run-script post-generate-keys",
-    "bundle-dev": "webpack --mode development --config webpack/webpack.config.js && npm run-script post-generate-keys",
+    "postinstall": "mkdir -p node_modules/.cache/_ns_cache/public && webpack --mode production --config webpack/webpack.config.js && bun run post-generate-keys",
+    "bundle": "webpack --mode production --config webpack/webpack.config.js && bun run post-generate-keys",
+    "bundle-dev": "webpack --mode development --config webpack/webpack.config.js && bun run post-generate-keys",
     "bundle-analyzer": "webpack --mode development --config webpack/webpack.config.js --profile --json > stats.json && webpack-bundle-analyzer stats.json",
-    "post-generate-keys": "node bin/generateRandomString.js >node_modules/.cache/_ns_cache/randomString && node bin/generateGitCommit.js",
+    "post-generate-keys": "mkdir -p node_modules/.cache/_ns_cache && bun bin/generateRandomString.js >node_modules/.cache/_ns_cache/randomString && bun bin/generateGitCommit.js",
     "coverage": "cat ./coverage/lcov.info | env-cmd -f ./tests/ci.test.env codacy-coverage || echo NO COVERAGE",
-    "dev": "env-cmd -f ./my.env nodemon --inspect lib/server/server.js 0.0.0.0",
-    "dev-test": "env-cmd -f ./my.devtest.env nodemon --inspect lib/server/server.js 0.0.0.0",
-    "prod": "env-cmd -f ./my.prod.env node lib/server/server.js 0.0.0.0",
+    "dev": "env-cmd -f ./my.env bun run --watch lib/server/server.js 0.0.0.0",
+    "dev-test": "env-cmd -f ./my.devtest.env bun run --watch lib/server/server.js 0.0.0.0",
+    "prod": "env-cmd -f ./my.prod.env bun lib/server/server.js 0.0.0.0",
     "lint": "eslint lib"
   },
   "main": "lib/server/server.js",
@@ -66,7 +66,8 @@
   },
   "engines": {
     "node": "^22.x || ^20.x",
-    "npm": ">=10.x"
+    "npm": ">=10.x",
+    "bun": "^1.x"
   },
   "dependencies": {
     "@babel/core": "7.29.0",
@@ -115,7 +116,7 @@
     "mongo-url-parser": "^1.0.2",
     "mongodb": "^4.17.2",
     "mongomock": "^0.1.2",
-    "nightscout-connect": "github:psonnera/nightscout-connect",
+    "nightscout-connect": "github:psonnera/nightscout-connect#bun",
     "node-cache": "^5.1.2",
     "parse-duration": "2.1.5",
     "process": "^0.11.10",
