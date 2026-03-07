@@ -240,6 +240,13 @@ h1, legend,
   overflow: hidden;
 }
 
+#toolbar .reportLabel {
+  color: #ccc;
+  font-size: 14px;
+  margin-right: 45px;
+  white-space: nowrap;
+}
+
 #toolbar .button-close {
   color: #404040;
   text-align: center;

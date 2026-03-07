@@ -8,6 +8,9 @@
             <a id="retroMenu" class="tip" original-title="Retro Browsing Menu" aria-label="Retro Browsing Menu" href="#"><i class="icon-calendar"></i></a>
             <a id="prevDay" class="tip" original-title="Previous day" aria-label="Previous Day" href="#"><i class="icon-left-circled"></i></a>
         </div>
+    <% } else if (type === 'report') { %>
+        <span class="reportLabel translate">Nightscout reporting</span>
+        <a href="/" class="closeButton button-close"><span>X</span></a>
     <% } else if (type !== 'index') { %>
         <a href="/" class="closeButton button-close"><span>X</span></a>
     <% } %>
@@ -37,7 +40,7 @@
     <% } %>
 </div>
 
-<%if (title) { %>
+<%if (title && type !== 'report') { %>
     <div class="toolbar-title">
         <h2 class="translate"><%= title %></h1>
     </div>

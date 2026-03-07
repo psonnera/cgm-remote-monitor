@@ -150,10 +150,11 @@
         </tr>
       </table>
     </details>
-    <div style="display: flex; gap: 10px; align-items: center; margin: 10px 0;">
-      <button id="rp_prev" class="rp_nav_button"><span class="translate">← PREV</span></button>
-      <button id="rp_show" class="translate">Show</button>
-      <button id="rp_next" class="rp_nav_button"><span class="translate">NEXT →</span></button>
+    <div id="rp_nav_buttons" style="display: flex; gap: 10px; align-items: center; margin: 10px 0; flex-wrap: nowrap;">
+      <button id="rp_prev" class="rp_nav_button"><span class="rp_nav_icon">◄</span></button>
+      <button id="rp_show"><span class="rp_nav_icon">↻</span></button>
+      <button id="rp_next" class="rp_nav_button"><span class="rp_nav_icon">►</span></button>
+      <span id="rp_active_report_title"></span>
     </div>
     <div id="info"></div>
     <hr>
