@@ -61,6 +61,12 @@ RUN rm -rf /tmp/*
 # Set the HEAD environment variable from build arg
 ENV HEAD=${HEAD}
 
+# Avoid container-provided HOSTNAME values (e.g. random pod/container names)
+# that can prevent external traffic from reaching the process.
+ENV HOSTNAME=0.0.0.0
+
 EXPOSE 1337
 
-CMD ["bun", "lib/server/server.js"]
+# Railway injects HOSTNAME with a container id. Override it at process launch
+# so the app binds to all interfaces and is reachable via the proxy.
+CMD ["env", "HOSTNAME=0.0.0.0", "bun", "lib/server/server.js"]
