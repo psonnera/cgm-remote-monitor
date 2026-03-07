@@ -154,12 +154,13 @@ To see the exact list of currently supported browser versions, run `npx browsers
 ## Installation software requirements:
 
 - [Node.js](http://nodejs.org/) Node 20.x or 22.x (LTS recommended). Node versions that do not have the latest security patches will not be supported. Use [Install instructions for Node](https://nodejs.org/en/download/package-manager/) or use `bin/setup.sh`)
+- [Bun](https://bun.sh/) Bun 1.x (required to run install/build/start scripts in this repository)
 - [MongoDB](https://www.mongodb.com/try/download/community) MongoDB 4.4 or later recommended (MongoDB 5.0+ for better performance and security). The `mongodb` npm package version 3.6.0 is used, which supports MongoDB 3.6 through 5.x.
 
 As a non-root user clone this repo then install dependencies into the root of the project:
 
 ```bash
-$ npm install
+$ bun install
 ```
 
 ## Installation notes for users with nginx or Apache reverse proxy for SSL/TLS offloading:
@@ -178,17 +179,18 @@ If you want to run Nightscout directly on Windows using Node.js and a local Mong
 
 1. Install [MongoDB Community Server](https://www.mongodb.com/try/download/community) (version 5.0 or later recommended)
 2. Install [Node.js](https://nodejs.org/) (version 20.x or 22.x)
-3. Clone this repository
-4. Run `npm install` in the project directory
-5. Configure your environment variables (see [Environment](#environment) section)
-6. Start MongoDB: `"C:\Program Files\MongoDB\Server\6.0\bin\mongod.exe" --dbpath "C:\data\db"`
-7. Start Nightscout: `node lib/server/server.js`
+3. Install [Bun](https://bun.sh/) (version 1.x)
+4. Clone this repository
+5. Run `bun install` in the project directory
+6. Configure your environment variables (see [Environment](#environment) section)
+7. Start MongoDB: `"C:\Program Files\MongoDB\Server\6.0\bin\mongod.exe" --dbpath "C:\data\db"`
+8. Start Nightscout: `bun run start`
 
 For detailed Windows installation instructions, see [Nightscout on Windows Server](https://github.com/jaylagorio/Nightscout-on-Windows-Server). The procedure works on Windows 10, Windows 11, and Windows Server 2016 or later.
 
 ### Development on Windows
 
-If you want to develop or test Nightscout on Windows, you need to install [Cygwin](https://www.cygwin.com/) (use [setup-x86_64.exe](https://www.cygwin.com/setup-x86_64.exe)) and make sure to install the `build-essential` package. Test your configuration by executing `make` and check if all tests are ok.
+If you want a clean local build on Windows, run `.\build.ps1` from the project root. This cleans local build artifacts, reinstalls dependencies, and rebuilds frontend bundles.
 
 # Development
 
