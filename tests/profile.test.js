@@ -385,4 +385,36 @@ describe('Profile', function ( ) {
       curProfile.carbs_hr.should.equal(30);
   });
 
+    it('should distinguish AAPS percentage profile switches from the base profile', function () {
+            var percentageProfile = require('../lib/profilefunctions')(multiProfileData, helper.ctx);
+            percentageProfile.updateTreatments([
+                {
+                    mills: noon,
+                    profile: '20190621-1',
+                    duration: 60,
+                    CircadianPercentageProfile: true,
+                    percentage: 125,
+                    timeshift: 0
+                }
+            ], [], []);
+
+            var baseState = percentageProfile.profileSwitchStateAtTime(noon - 60000);
+            var activeState = percentageProfile.profileSwitchStateAtTime(noon + 60000);
+
+            percentageProfile.profileSwitchStateKey(baseState).should.not.equal(percentageProfile.profileSwitchStateKey(activeState));
+            percentageProfile.profileSwitchDisplay(activeState).should.equal('20190621-1 (125%)');
+    });
+
+    it('should include timeshift in AAPS profile switch display text', function () {
+            var percentageProfile = require('../lib/profilefunctions')(multiProfileData, helper.ctx);
+            var display = percentageProfile.profileSwitchDisplay({
+                profile: '20190621-1',
+                CircadianPercentageProfile: true,
+                percentage: 110,
+                timeshift: 2
+            });
+
+            display.should.equal('20190621-1 (110%, +2h)');
+    });
+
 });

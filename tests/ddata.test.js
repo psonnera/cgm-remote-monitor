@@ -2,6 +2,7 @@
 'use strict';
 
 var should = require('should');
+var inithelper = require('./inithelper')();
 
 
 describe('ddata', function ( ) {
@@ -54,6 +55,44 @@ describe('ddata', function ( ) {
   // * ddata.processDurations
   // * ddata.clone
   // * ddata.split
+
+  it('should synthesize an AAPS restore note into a profile switch treatment', function (done) {
+    var ddata = require('../lib/data/ddata')();
+
+    ddata.treatments = ddata.processRawDataForRuntime([
+      {
+        _id: 'profile-switch-start'
+        , eventType: 'Profile Switch'
+        , profile: 'Normal (125%)'
+        , originalProfileName: 'Normal'
+        , percentage: 125
+        , duration: 30
+        , created_at: '2026-03-29T13:10:19.000Z'
+      }
+      , {
+        _id: 'profile-switch-end-note'
+        , eventType: 'Note'
+        , notes: 'Normal'
+        , originalCustomizedName: 'Normal'
+        , originalDuration: 0
+        , originalEnd: 1774791619000
+        , originalPercentage: 100
+        , originalProfileName: 'Normal'
+        , originalTimeshift: 0
+        , profileJson: '{"units":"mg/dl"}'
+        , created_at: '2026-03-29T13:40:30.086Z'
+      }
+    ]);
+
+    ddata.processTreatments(true);
+
+    ddata.profileTreatments.should.have.length(2);
+    ddata.profileTreatments[1].eventType.should.equal('Profile Switch');
+    ddata.profileTreatments[1].profile.should.equal('Normal');
+    ddata.profileTreatments[1].syntheticAapsProfileRestore.should.equal(true);
+    ddata.profileTreatments[1].duration.should.equal(0);
+    done();
+  });
  
 
 });
