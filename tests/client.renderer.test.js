@@ -72,4 +72,32 @@ describe('renderer', () => {
       });
     });
   });
+
+  describe('shouldRenderTreatmentProfiles', () => {
+    it('renders profile markers when profile switch treatments exist with only one named base profile', () => {
+      let mockClient = {
+        ddata: {
+          profileTreatments: [{ mills: 1000, eventType: 'Profile Switch', profile: 'Normal' }]
+        }
+        , profilefunctions: {
+          listBasalProfiles: () => ['Normal']
+        }
+      };
+
+      renderer(mockClient, {}).shouldRenderTreatmentProfiles().should.equal(true);
+    });
+
+    it('hides profile markers when there are no treatments and only one base profile', () => {
+      let mockClient = {
+        ddata: {
+          profileTreatments: []
+        }
+        , profilefunctions: {
+          listBasalProfiles: () => ['Normal']
+        }
+      };
+
+      renderer(mockClient, {}).shouldRenderTreatmentProfiles().should.equal(false);
+    });
+  });
 });
