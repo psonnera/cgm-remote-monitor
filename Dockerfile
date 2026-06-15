@@ -1,5 +1,5 @@
-# Stage 1: Build webpack bundles with Node.js
-FROM node:20-slim AS builder
+# Stage 1: Build webpack bundles with Bun
+FROM oven/bun:latest AS builder
 
 WORKDIR /opt/app
 ADD . /opt/app
@@ -7,11 +7,11 @@ ADD . /opt/app
 # Install git (required for GitHub dependencies) and build tools
 RUN apt-get update && apt-get install -y git && rm -rf /var/lib/apt/lists/*
 
-# Install dependencies and build webpack bundles (skip all npm scripts)
-RUN npm install --include=dev --ignore-scripts && \
+# Install dependencies (incl. dev) and build webpack bundles (skip all scripts)
+RUN bun install --frozen-lockfile --ignore-scripts && \
   echo "Building webpack bundles..." && \
   mkdir -p node_modules/.cache/_ns_cache/public && \
-  npx webpack --mode production --config webpack/webpack.config.js && \
+  bunx webpack --mode production --config webpack/webpack.config.js && \
   echo "Verifying bundles..." && \
   ls -lah node_modules/.cache/_ns_cache/public/js/ && \
   test -f node_modules/.cache/_ns_cache/public/js/bundle.app.js && echo "✓ bundle.app.js created" || exit 1 && \

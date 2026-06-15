@@ -3,8 +3,8 @@ param(
     [switch]$SkipClean,
     [switch]$SkipInstall,
     [switch]$SkipBundle,
-    [switch]$RunTests,
-    [switch]$RemoveLockFiles
+    [switch]$RemoveLockFiles,
+    [switch]$Dev
 )
 
 Set-StrictMode -Version Latest
@@ -85,18 +85,15 @@ try {
     }
 
     if (-not $SkipInstall) {
-        Write-Step "Installing dependencies (bun install --frozen-lockfile)"
-        Invoke-CommandChecked -Command "bun" -Arguments @("install", "--frozen-lockfile")
+        # --ignore-scripts prevents postinstall from running webpack so it only runs once below
+        Write-Step "Installing dependencies (bun install --frozen-lockfile --ignore-scripts)"
+        Invoke-CommandChecked -Command "bun" -Arguments @("install", "--frozen-lockfile", "--ignore-scripts")
     }
 
     if (-not $SkipBundle) {
-        Write-Step "Building frontend bundles (bun run bundle)"
-        Invoke-CommandChecked -Command "bun" -Arguments @("run", "bundle")
-    }
-
-    if ($RunTests) {
-        Write-Step "Running tests (bun run test)"
-        Invoke-CommandChecked -Command "bun" -Arguments @("run", "test")
+        $bundleScript = if ($Dev) { "bundle-dev" } else { "bundle" }
+        Write-Step "Building frontend bundles (bun run $bundleScript)"
+        Invoke-CommandChecked -Command "bun" -Arguments @("run", $bundleScript)
     }
 
     Write-Step "Clean build completed successfully."

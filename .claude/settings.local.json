@@ -1,7 +1,22 @@
 {
   "permissions": {
     "allow": [
-      "Bash(ls:*)"
+      "Bash(ls:*)",
+      "WebFetch(domain:127.0.0.1)",
+      "Bash(bun start *)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://127.0.0.1:1337/report/)",
+      "Bash(curl -s http://127.0.0.1:1337/report/)",
+      "Bash(curl -s http://127.0.0.1:1337/bundle/js/bundle.app.js)",
+      "PowerShell(Get-Service *)",
+      "PowerShell(Get-Command *)",
+      "PowerShell(docker ps *)",
+      "Bash(npm run *)",
+      "Bash(git *)",
+      "Bash(xargs head -50)",
+      "Bash(grep *)",
+      "Bash(xargs cat)",
+      "Bash(bun *)",
+      "PowerShell(bun *)"
     ]
   }
 }

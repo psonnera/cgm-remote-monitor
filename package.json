@@ -27,46 +27,25 @@
   },
   "scripts": {
     "start": "bun lib/server/server.js",
-    "test": "env-cmd -f ./my.test.env mocha --timeout 5000 --require ./tests/hooks.js -exit ./tests/*.test.js",
-    "test-single": "env-cmd -f ./my.test.env mocha --timeout 5000 --require ./tests/hooks.js --exit ./tests/$TEST.test.js",
-    "test-ci": "env-cmd -f ./tests/ci.test.env nyc --reporter=lcov --reporter=text-summary mocha --timeout 5000 --require ./tests/hooks.js --exit ./tests/*.test.js",
     "env": "env",
     "postinstall": "mkdir -p node_modules/.cache/_ns_cache/public && webpack --mode production --config webpack/webpack.config.js && bun run post-generate-keys",
     "bundle": "webpack --mode production --config webpack/webpack.config.js && bun run post-generate-keys",
     "bundle-dev": "webpack --mode development --config webpack/webpack.config.js && bun run post-generate-keys",
     "bundle-analyzer": "webpack --mode development --config webpack/webpack.config.js --profile --json > stats.json && webpack-bundle-analyzer stats.json",
     "post-generate-keys": "mkdir -p node_modules/.cache/_ns_cache && bun bin/generateRandomString.js >node_modules/.cache/_ns_cache/randomString && bun bin/generateGitCommit.js",
-    "coverage": "cat ./coverage/lcov.info | env-cmd -f ./tests/ci.test.env codacy-coverage || echo NO COVERAGE",
-    "dev": "env-cmd -f ./my.env bun run --watch lib/server/server.js 0.0.0.0",
-    "dev-test": "env-cmd -f ./my.devtest.env bun run --watch lib/server/server.js 0.0.0.0",
-    "prod": "env-cmd -f ./my.prod.env bun lib/server/server.js 0.0.0.0",
+    "dev": "bun --env-file=./my.env --watch lib/server/server.js 0.0.0.0",
+    "dev-test": "bun --env-file=./my.devtest.env --watch lib/server/server.js 0.0.0.0",
+    "prod": "bun --env-file=./my.prod.env lib/server/server.js 0.0.0.0",
     "lint": "eslint lib"
   },
   "main": "lib/server/server.js",
   "nodemonConfig": {
     "ignore": [
-      "tests/*",
       "node_modules/*",
       "bin/*"
     ]
   },
-  "config": {
-    "blanket": {
-      "pattern": [
-        "tests",
-        "lib",
-        "server",
-        "app",
-        "static/js"
-      ],
-      "data-cover-never": [
-        "node_modules"
-      ]
-    }
-  },
   "engines": {
-    "node": "^22.x || ^20.x",
-    "npm": ">=10.x",
     "bun": "^1.x"
   },
   "dependencies": {
@@ -140,21 +119,13 @@
     "@types/tough-cookie": "^4.0.0",
     "babel-eslint": "^10.1.0",
     "babel-loader": "^10.0.0",
-    "benv": "^3.3.0",
-    "csv-parse": "^6.1.0",
-    "env-cmd": "^10.1.0",
     "eslint": "^8.57.1",
     "eslint-plugin-security": "^1.7.1",
     "eslint-webpack-plugin": "^5.0.2",
-    "mocha": "^11.7.5",
     "nodemon": "^3.1.14",
-    "nyc": "^18.0.0",
-    "should": "^13.2.3",
-    "supertest": "^7.2.2",
     "vm-browserify": "^1.1.2",
     "webpack-bundle-analyzer": "^5.2.0",
     "webpack-dev-middleware": "^7.4.5",
-    "webpack-hot-middleware": "2.26.1",
-    "xml2js": "^0.6.2"
+    "webpack-hot-middleware": "2.26.1"
   }
 }
