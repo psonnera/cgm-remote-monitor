@@ -64,7 +64,6 @@ try {
 
         $pathsToDelete = @(
             (Join-Path $repoRoot "node_modules"),
-            (Join-Path $repoRoot ".cache"),
             (Join-Path $repoRoot "coverage"),
             (Join-Path $repoRoot "stats.json"),
             (Join-Path $repoRoot "npm-debug.log"),
@@ -85,9 +84,20 @@ try {
     }
 
     if (-not $SkipInstall) {
-        # --ignore-scripts prevents postinstall from running webpack so it only runs once below
-        Write-Step "Installing dependencies (bun install --frozen-lockfile --ignore-scripts)"
-        Invoke-CommandChecked -Command "bun" -Arguments @("install", "--frozen-lockfile", "--ignore-scripts")
+        # --ignore-scripts prevents postinstall from running webpack so it only runs once below.
+        $installArgs = @("install", "--ignore-scripts")
+
+        # Normally honor the committed lockfile exactly. But if it was just deleted
+        # (-RemoveLockFiles during clean), --frozen-lockfile would resolve fresh
+        # WITHOUT writing a new bun.lock, leaving the repo with no lockfile. In that
+        # case resolve fresh and let bun regenerate bun.lock instead.
+        $lockFilesRemoved = $RemoveLockFiles -and -not $SkipClean
+        if (-not $lockFilesRemoved) {
+            $installArgs += "--frozen-lockfile"
+        }
+
+        Write-Step "Installing dependencies (bun $($installArgs -join ' '))"
+        Invoke-CommandChecked -Command "bun" -Arguments $installArgs
     }
 
     if (-not $SkipBundle) {
