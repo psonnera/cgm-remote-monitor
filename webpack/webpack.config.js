@@ -1,7 +1,6 @@
 const path = require('path');
 const webpack = require('webpack');
 const pluginArray = [];
-const sourceMapType = 'source-map';
 const MomentTimezoneDataPlugin = require('moment-timezone-data-webpack-plugin');
 const projectRoot = path.resolve(__dirname, '..');
 
@@ -23,7 +22,17 @@ pluginArray.push(new MomentTimezoneDataPlugin({
   endYear: 2035,
 }));
 
-const rules = [
+// Drop moment's bundled locale files (~150 KB). The client never calls
+// moment.locale() — only the server-side alexa/googlehome API plugins do, and
+// those load locales via Node, not this webpack bundle. English ("en") is built
+// into moment's core, so the client keeps full date formatting.
+pluginArray.push(new webpack.IgnorePlugin({
+  resourceRegExp: /^\.\/locale$/,
+  contextRegExp: /moment$/,
+}));
+
+function makeRules (enableSourceMaps) {
+  return [
   {
     test: /\.(js|jsx)$/,
     use: {
@@ -41,7 +50,7 @@ const rules = [
       {
         loader: 'css-loader',
         options: {
-          sourceMap: true,
+          sourceMap: enableSourceMaps,
         },
       } ],
     exclude: /node_modules/
@@ -63,13 +72,13 @@ const rules = [
       exposes: ['$']
     }
   }
-];
+  ];
+}
 
 const appEntry = ['./bundle/bundle.source.js'];
 const clockEntry = ['./bundle/bundle.clocks.source.js'];
 const retroEntry = ['./bundle/bundle.retro.source.js'];
 
-const mode = 'production';
 const publicPath = '/bundle/';
 
 // splitChunks extracts shared vendor dependencies into a separate cacheable chunk
@@ -94,7 +103,27 @@ const optimization = {
 };
 
 
-module.exports = {
+module.exports = (env, argv) => {
+  // Honor the CLI --mode flag (bundle-dev passes "development"); default to production.
+  const mode = (argv && argv.mode) ? argv.mode : 'production';
+  const isProduction = mode === 'production';
+  // Source maps are a dev-only debugging aid. In production they add ~10 MB of
+  // .map files for zero runtime benefit, so emit them only for development builds.
+  const devtool = isProduction ? false : 'source-map';
+
+  const output = {
+    path: path.resolve(projectRoot, './node_modules/.cache/_ns_cache/public'),
+    publicPath,
+    filename: 'js/bundle.[name].js',
+    // Wipe stale outputs (e.g. orphaned .map files) on every build so the
+    // served directory only ever contains current artifacts.
+    clean: true,
+  };
+  if (!isProduction) {
+    output.sourceMapFilename = 'js/bundle.[name].js.map';
+  }
+
+  return {
   mode,
   context: projectRoot,
   entry: {
@@ -102,17 +131,12 @@ module.exports = {
     clock: clockEntry,
     retro: retroEntry
   },
-  output: {
-    path: path.resolve(projectRoot, './node_modules/.cache/_ns_cache/public'),
-    publicPath,
-    filename: 'js/bundle.[name].js',
-    sourceMapFilename: 'js/bundle.[name].js.map',
-  },
-  devtool: sourceMapType,
+  output,
+  devtool,
   optimization,
   plugins: pluginArray,
   module: {
-    rules
+    rules: makeRules(!isProduction)
   },
   resolve: {
     fallback: {
@@ -126,4 +150,5 @@ module.exports = {
       buffer: 'buffer',
     }
   }
+  };
 };
