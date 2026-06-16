@@ -16,7 +16,13 @@
       "Bash(grep *)",
       "Bash(xargs cat)",
       "Bash(bun *)",
-      "PowerShell(bun *)"
+      "PowerShell(bun *)",
+      "Bash(ls bun.lockb bun.lock package-lock.json)",
+      "Bash(node --version)",
+      "Bash(bun --version)",
+      "Bash(npm audit *)",
+      "Bash(cp package.json /tmp/pkg.bak)",
+      "Bash(cp bun.lock /tmp/lock.bak)"
     ]
   }
 }
