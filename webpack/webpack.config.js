@@ -1,8 +1,37 @@
 const path = require('path');
+const zlib = require('zlib');
 const webpack = require('webpack');
 const pluginArray = [];
 const MomentTimezoneDataPlugin = require('moment-timezone-data-webpack-plugin');
 const projectRoot = path.resolve(__dirname, '..');
+
+// Emit a Brotli-precompressed copy (.br) of every JS bundle at build time, so
+// the server can serve it directly to clients that accept `br` (~15-20% smaller
+// than gzip). Implemented inline to avoid an extra build dependency.
+class BrotliAssetsPlugin {
+  apply (compiler) {
+    const { Compilation, sources } = compiler.webpack;
+    compiler.hooks.thisCompilation.tap('BrotliAssetsPlugin', (compilation) => {
+      compilation.hooks.processAssets.tap(
+        { name: 'BrotliAssetsPlugin', stage: Compilation.PROCESS_ASSETS_STAGE_REPORT },
+        (assets) => {
+          for (const name of Object.keys(assets)) {
+            if (!name.endsWith('.js')) continue;
+            const raw = compilation.getAsset(name).source.source();
+            const buf = Buffer.isBuffer(raw) ? raw : Buffer.from(raw);
+            const compressed = zlib.brotliCompressSync(buf, {
+              params: {
+                [zlib.constants.BROTLI_PARAM_QUALITY]: 11,
+                [zlib.constants.BROTLI_PARAM_SIZE_HINT]: buf.length,
+              },
+            });
+            compilation.emitAsset(name + '.br', new sources.RawSource(compressed));
+          }
+        }
+      );
+    });
+  }
+}
 
 pluginArray.push(new webpack.ProvidePlugin({
   $: 'jquery',
@@ -76,6 +105,7 @@ function makeRules (enableSourceMaps) {
 }
 
 const appEntry = ['./bundle/bundle.source.js'];
+const dashboardEntry = ['./bundle/bundle.dashboard.source.js'];
 const clockEntry = ['./bundle/bundle.clocks.source.js'];
 const retroEntry = ['./bundle/bundle.retro.source.js'];
 
@@ -90,8 +120,8 @@ const optimization = {
       vendor: {
         test: /[\\/]node_modules[\\/]/,
         name: 'vendor',
-        // Only split chunks used by both app and retro (not clock - it's already small)
-        chunks: (chunk) => ['app', 'retro'].includes(chunk.name),
+        // Share the vendor chunk across the main page entries (not clock - small)
+        chunks: (chunk) => ['app', 'dashboard', 'retro'].includes(chunk.name),
         // Always create vendor chunk for matched modules
         minSize: 0,
         minChunks: 1,
@@ -123,18 +153,22 @@ module.exports = (env, argv) => {
     output.sourceMapFilename = 'js/bundle.[name].js.map';
   }
 
+  // Only precompress for production builds.
+  const plugins = isProduction ? pluginArray.concat(new BrotliAssetsPlugin()) : pluginArray;
+
   return {
   mode,
   context: projectRoot,
   entry: {
     app: appEntry,
+    dashboard: dashboardEntry,
     clock: clockEntry,
     retro: retroEntry
   },
   output,
   devtool,
   optimization,
-  plugins: pluginArray,
+  plugins,
   module: {
     rules: makeRules(!isProduction)
   },
