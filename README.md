@@ -97,7 +97,6 @@ See [CONTRIBUTING.md](CONTRIBUTING.md)
           - [`treatmentnotify` (Treatment Notifications)](#treatmentnotify-treatment-notifications)
           - [`basal` (Basal Profile)](#basal-basal-profile)
           - [`bolus` (Bolus Rendering)](#bolus-bolus-rendering)
-          - [`connect` (Nightscout Connect)](#connect-nightscout-connect)
           - [`pump` (Pump Monitoring)](#pump-pump-monitoring)
           - [`openaps` (OpenAPS)](#openaps-openaps)
           - [`loop` (Loop)](#loop-loop)
@@ -155,7 +154,7 @@ To see the exact list of currently supported browser versions, run `npx browsers
 
 - [Node.js](http://nodejs.org/) Node 20.x or 22.x (LTS recommended). Node versions that do not have the latest security patches will not be supported. Use [Install instructions for Node](https://nodejs.org/en/download/package-manager/) or use `bin/setup.sh`)
 - [Bun](https://bun.sh/) Bun 1.x (required to run install/build/start scripts in this repository)
-- [MongoDB](https://www.mongodb.com/try/download/community) MongoDB 4.4 or later recommended (MongoDB 5.0+ for better performance and security). The `mongodb` npm package version 3.6.0 is used, which supports MongoDB 3.6 through 5.x.
+- [MongoDB](https://www.mongodb.com/try/download/community) MongoDB 4.4 or later (MongoDB 6.0+ recommended for better performance and security). This project uses the `mongodb` npm driver v6, which supports MongoDB server 4.2 and later.
 
 As a non-root user clone this repo then install dependencies into the root of the project:
 
@@ -169,9 +168,6 @@ $ bun install
 - In case you use a proxy. Do not use an external network interfaces for hosting Nightscout. Make sure the unsecure port is not available from a remote network connection
 - HTTP Strict Transport Security (HSTS) headers are enabled by default, use settings `SECURE_HSTS_HEADER` and `SECURE_HSTS_HEADER_*`
 - See [Predefined values for your server settings](#predefined-values-for-your-server-settings-optional) for more details
-
-
-...existing code...
 
 ### Local Windows Installation with Node.js
 
@@ -667,13 +663,14 @@ For remote overrides, the following extended settings must be configured:
 Easy to emulate on the commandline:
 
 ```bash
-    echo 'MONGO_CONNECTION=mongodb://sally:sallypass@ds099999.mongolab.com:99999/nightscout' >> my.env
-    echo 'MONGO_COLLECTION=entries' >> my.env
+    echo 'MONGODB_URI=mongodb://sally:sallypass@ds099999.mongolab.com:99999/nightscout' >> my.env
+    echo 'MONGODB_COLLECTION=entries' >> my.env
+    echo 'PORT=1337' >> my.env
 ```
 
-From now on you can run using
+From now on you can run using Bun's native env-file support (the `dev` and `prod` scripts in `package.json` do this for you):
 ```bash
-    $ (eval $(cat my.env | sed 's/^/export /') && PORT=1337 node server.js)
+    $ bun --env-file=./my.env lib/server/server.js
 ```
 
 Your hosting provider probably has a way to set these through their GUI.
