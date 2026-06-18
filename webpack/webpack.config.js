@@ -86,6 +86,12 @@ function makeRules (enableSourceMaps) {
   },
   {
     test: /\.(jpe?g|png|gif)$/i,
+    // webpack 5 ships built-in Asset Modules that also handle images. Without
+    // this, webpack re-processes file-loader's JS output as an asset, emitting
+    // the "export default ..." string as a bogus .png and pointing css-loader's
+    // url() at it (breaks the #toolbar logo). 'javascript/auto' opts this rule
+    // out of the built-in asset pipeline so file-loader is the sole handler.
+    type: 'javascript/auto',
     loader: 'file-loader',
     options: {
       outputPath: 'images'
