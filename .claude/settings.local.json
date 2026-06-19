@@ -23,7 +23,12 @@
       "Bash(npm audit *)",
       "Bash(cp package.json /tmp/pkg.bak)",
       "Bash(cp bun.lock /tmp/lock.bak)",
-      "WebSearch"
+      "WebSearch",
+      "Bash(mongosh --version)",
+      "Bash(node --check bin/backfill-iobcob.js)",
+      "Bash(node --check lib/server/iobcob.js)",
+      "Bash(node --check lib/server/bootevent.js)",
+      "Bash(node --check lib/server/env.js)"
     ]
   }
 }
