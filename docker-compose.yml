@@ -11,6 +11,10 @@ services:
   mongo:
     image: mongo:6.0
     restart: always
+    # Cap WiredTiger's cache: without it Mongo assumes it owns ~50% of the
+    # host's RAM, which starves the app on a small VPS sharing the box.
+    command: ['mongod', '--wiredTigerCacheSizeGB', '0.5']
+    mem_limit: 1g
     volumes:
       - ${NS_MONGO_DATA_DIR:-./mongo-data}:/data/db:cached
     logging: *default-logging
@@ -19,8 +23,14 @@ services:
     image: nightscout/cgm-remote-monitor:latest
     container_name: nightscout
     restart: always
+    # If the app ever leaks again, the kernel OOM-kills just this container
+    # and restart:always brings it back — instead of the whole VPS going down.
+    mem_limit: 768m
     depends_on:
       - mongo
+    volumes:
+      # Heap snapshots from POST /api/v1/memory/heapsnapshot land here
+      - ./heapsnapshots:/snapshots
     labels:
       - 'traefik.enable=true'
       # Change the below Host from `localhost` to be the web address where Nightscout is running.
@@ -33,6 +43,11 @@ services:
       ### Variables for the container
       NODE_ENV: production
       TZ: Etc/UTC
+
+      ### Memory diagnostics (lib/server/memmon.js)
+      # MEMORY_MONITOR: 'true'          # default on; one MEMMON log line per interval
+      # MEMORY_MONITOR_INTERVAL: '300'  # seconds
+      MEMORY_SNAPSHOT_DIR: /snapshots
 
       ### Overridden variables for Docker Compose setup
       # The `nightscout` service can use HTTP, because we use `traefik` to serve the HTTPS
