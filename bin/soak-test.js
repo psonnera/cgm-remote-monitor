@@ -40,10 +40,51 @@ if (!API_SECRET) {
 
 const secretHash = crypto.createHash('sha1').update(API_SECRET).digest('hex');
 
+// Admin (api-secret) headers: used for /api/v1/memory sampling and for
+// bootstrapping the API v3 subject below.
 const headers = {
   'Content-Type': 'application/json'
   , 'api-secret': secretHash
 };
+
+// API v3 only accepts Authorization: Bearer <JWT>, obtained from an
+// access-token subject — same flow AAPS uses.
+const SUBJECT_NAME = 'soak-uploader';
+let jwt = null;
+let jwtExp = 0;
+
+async function fetchJSON (path, opts) {
+  const res = await fetch(BASE_URL + path, opts);
+  if (res.status >= 400) {
+    throw new Error(path + ' -> HTTP ' + res.status + ' ' + (await res.text()).slice(0, 200));
+  }
+  return res.json();
+}
+
+async function ensureJwt () {
+  if (jwt && Date.now() / 1000 < jwtExp - 120) return jwt;
+
+  let subjects = await fetchJSON('/api/v2/authorization/subjects', { headers: headers });
+  let subject = subjects.find(function (s) { return s.name === SUBJECT_NAME; });
+  if (!subject) {
+    await fetchJSON('/api/v2/authorization/subjects', {
+      method: 'POST'
+      , headers: headers
+      , body: JSON.stringify({ name: SUBJECT_NAME, roles: ['admin'], notes: 'soak-test' })
+    });
+    subjects = await fetchJSON('/api/v2/authorization/subjects', { headers: headers });
+    subject = subjects.find(function (s) { return s.name === SUBJECT_NAME; });
+  }
+  if (!subject || !subject.accessToken) {
+    throw new Error('could not create/find soak-test subject');
+  }
+
+  const auth = await fetchJSON('/api/v2/authorization/request/' + subject.accessToken, { headers: headers });
+  jwt = auth.token;
+  jwtExp = auth.exp || (Date.now() / 1000 + 600);
+  console.log('JWT acquired for subject ' + SUBJECT_NAME + ', expires ' + new Date(jwtExp * 1000).toISOString());
+  return jwt;
+}
 
 let uploads = 0;
 let glucose = 120;
@@ -65,10 +106,11 @@ function makeEntry () {
     type: 'sgv'
     , sgv: nextGlucose()
     , date: Date.now()
+    , utcOffset: 0
+    , app: 'soak-test'
     , dateString: nowISO()
     , direction: trend > 0 ? 'FortyFiveUp' : 'FortyFiveDown'
     , device: 'soak-test'
-    , identifier: crypto.randomUUID()
   };
 }
 
@@ -81,8 +123,10 @@ function makeDeviceStatus () {
   }
   return {
     device: 'openaps://soak-test'
+    , date: Date.now()
+    , utcOffset: 0
+    , app: 'soak-test'
     , created_at: nowISO()
-    , identifier: crypto.randomUUID()
     , openaps: {
       iob: { iob: Math.random() * 3, time: nowISO() }
       , suggested: {
@@ -112,6 +156,9 @@ function makeTreatment () {
   return {
     eventType: 'Correction Bolus'
     , insulin: Math.round(Math.random() * 20) / 10
+    , date: Date.now()
+    , utcOffset: 0
+    , app: 'soak-test'
     , created_at: nowISO()
     , enteredBy: 'soak-test'
     , identifier: crypto.randomUUID()
@@ -119,11 +166,18 @@ function makeTreatment () {
 }
 
 async function post (path, body) {
+  const token = await ensureJwt();
   const res = await fetch(BASE_URL + path, {
     method: 'POST'
-    , headers: headers
+    , headers: {
+      'Content-Type': 'application/json'
+      , 'Authorization': 'Bearer ' + token
+    }
     , body: JSON.stringify(body)
   });
+  if (res.status === 401) {
+    jwt = null; // force refresh on the next tick
+  }
   if (res.status >= 400) {
     console.error('POST ' + path + ' -> ' + res.status + ' ' + (await res.text()).slice(0, 200));
   }
@@ -137,7 +191,8 @@ async function sampleMemory () {
       console.error('GET /api/v1/memory -> ' + res.status);
       return;
     }
-    const m = await res.json();
+    const body = await res.json();
+    const m = body.message || body; // sendJSONStatus wraps as {status, message}
     const row = [
       m.ts, uploads, m.rssMB, m.heapUsedMB, m.dataLoads, m.dataReceived
       , m.jsc ? m.jsc.objectCount : ''
