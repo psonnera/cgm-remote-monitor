@@ -32,6 +32,14 @@ const API_SECRET = arg('secret', process.env.API_SECRET || '');
 const INTERVAL_SECS = parseInt(arg('interval', '3'), 10);
 const SAMPLE_EVERY = parseInt(arg('sample-every', '20'), 10);
 const CSV_FILE = arg('csv', 'soak.csv');
+// Backdating pushes docs outside the server cache's retention window so the
+// in-memory cache stays constant-size while upload/reload churn continues —
+// separates "RSS tracks cache size" from "RSS leaks per operation".
+const BACKDATE_MS = parseInt(arg('backdate-days', '0'), 10) * 86400000;
+
+function docTime () {
+  return Date.now() - BACKDATE_MS;
+}
 
 if (!API_SECRET) {
   console.error('Provide --secret <API_SECRET> (or set API_SECRET env var)');
@@ -105,10 +113,10 @@ function makeEntry () {
   return {
     type: 'sgv'
     , sgv: nextGlucose()
-    , date: Date.now()
+    , date: docTime()
     , utcOffset: 0
     , app: 'soak-test'
-    , dateString: nowISO()
+    , dateString: new Date(docTime()).toISOString()
     , direction: trend > 0 ? 'FortyFiveUp' : 'FortyFiveDown'
     , device: 'soak-test'
   };
@@ -123,10 +131,10 @@ function makeDeviceStatus () {
   }
   return {
     device: 'openaps://soak-test'
-    , date: Date.now()
+    , date: docTime()
     , utcOffset: 0
     , app: 'soak-test'
-    , created_at: nowISO()
+    , created_at: new Date(docTime()).toISOString()
     , openaps: {
       iob: { iob: Math.random() * 3, time: nowISO() }
       , suggested: {
@@ -156,12 +164,11 @@ function makeTreatment () {
   return {
     eventType: 'Correction Bolus'
     , insulin: Math.round(Math.random() * 20) / 10
-    , date: Date.now()
+    , date: docTime()
     , utcOffset: 0
     , app: 'soak-test'
-    , created_at: nowISO()
+    , created_at: new Date(docTime()).toISOString()
     , enteredBy: 'soak-test'
-    , identifier: crypto.randomUUID()
   };
 }
 
