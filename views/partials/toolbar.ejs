@@ -10,20 +10,25 @@
         </div>
     <% } else if (type === 'report') { %>
         <span class="reportLabel translate">Nightscout reporting</span>
-        <a href="/" class="closeButton button-close"><span>X</span></a>
-    <% } else if (type !== 'index') { %>
-        <a href="/" class="closeButton button-close"><span>X</span></a>
     <% } %>
 
     <%if (type === 'food') { %>
-      <div id="buttonbar">
+      <div id="buttonbar" class="editor-status" role="status" aria-live="polite">
         <b> <span class="translate">Status</span>:</b> <span id="fe_status" class="translate">Not loaded</span>
       </div>
     <% } %>
     <%if (type === 'profile') { %>
-      <div id="buttonbar">
+      <div id="buttonbar" class="editor-status" role="status" aria-live="polite">
         <b> <span class="translate">Status</span>:</b> <span class="pe_status translate">Not loaded</span>
       </div>
+    <% } %>
+
+    <% if (['profile', 'food', 'admin', 'report'].indexOf(type) !== -1) { %>
+      <%- include('editor-navigation') %>
+    <% } %>
+
+    <%if (type !== 'index' && type !== 'retro') { %>
+        <a href="/" class="closeButton button-close" aria-label="Back to Nightscout"><span>X</span></a>
     <% } %>
     <%if (type === 'index') { %>
         <div id="buttonbar" role="navigation" aria-label="Menu" >
@@ -42,6 +47,6 @@
 
 <%if (title && type !== 'report') { %>
     <div class="toolbar-title">
-        <h2 class="translate"><%= title %></h1>
+        <h2 class="translate"><%= title %></h2>
     </div>
 <% } %>

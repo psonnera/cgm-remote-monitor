@@ -235,3 +235,7 @@ label {
 #filters_section[open] summary::before {
   transform: rotate(90deg);
 }
+/* Structural wrapper has no visual effect on the established report theme. */
+.report-filters { min-width: 0; margin: 0; padding: 0; border: 0; }
+.report-filters-title { display: none; }
+.report-field-label { display: inline; margin-right: 0; }

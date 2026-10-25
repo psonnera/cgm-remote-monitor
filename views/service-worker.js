@@ -27,6 +27,9 @@ const CACHE_LIST = [
     '/css/ui-darkness/images/ui-bg_inset-soft_25_000000_1x100.png',
     '/css/ui-darkness/images/ui-bg_gloss-wave_25_333333_500x100.png',
     '/css/main.css',
+    // The modern theme stylesheet is requested with the startup cachebuster.
+    '/css/modern.css',
+    '/css/modern.css?' + CACHE,
     // Every entry bundle that shares the split-out `vendor` chunk MUST be cached
     // alongside it. vendor + app/dashboard/retro come from a single webpack build
     // and share module IDs (no content-hashed filenames), so serving a cached
