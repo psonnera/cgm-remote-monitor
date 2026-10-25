@@ -164,7 +164,7 @@ $ bun install
 
 ## Installation notes for users with nginx or Apache reverse proxy for SSL/TLS offloading:
 
-- Your site redirects insecure connections to `https` by default. If you use a reverse proxy like nginx or Apache to handle the connection security for you, make sure it sets the `X-Forwarded-Proto` header. Otherwise nightscout will be unable to know if it was called through a secure connection and will try to redirect you to the https version. If you're unable to set this Header, you can change the `INSECURE_USE_HTTP` setting in nightscout to true in order to allow insecure connections without being redirected.
+- Your site redirects insecure connections to `https` by default. If you use a reverse proxy like nginx or Apache to handle the connection security for you, make sure it sets the `X-Forwarded-Proto` header. Otherwise nightscout will be unable to know if it was called through a secure connection and will try to redirect you to the https version. If you're unable to set this Header, you can change the `INSECURE_USE_HTTP` setting in nightscout to true in order to allow insecure connections without being redirected. Reverse-proxy compatibility (forwarded headers believed from any peer) remains the default; the proxy must sanitize forwarded headers and control access to the backend. The optional `TRUST_PROXY` setting narrows that trust to a hop count or a list of proxy addresses.
 - In case you use a proxy. Do not use an external network interfaces for hosting Nightscout. Make sure the unsecure port is not available from a remote network connection
 - HTTP Strict Transport Security (HSTS) headers are enabled by default, use settings `SECURE_HSTS_HEADER` and `SECURE_HSTS_HEADER_*`
 - See [Predefined values for your server settings](#predefined-values-for-your-server-settings-optional) for more details
@@ -305,6 +305,7 @@ autonomy for your data:
   * `SSL_CA` - Path to your ssl ca file, so that ssl(https) can be enabled directly in node.js. If using Let's Encrypt, make this variable the path to chain.pem file (chain).
   * `HEARTBEAT` (`60`)  - Number of seconds to wait in between database checks
   * `DEBUG_MINIFY` (`true`)  - Debug option, setting to `false` will disable bundle minification to help tracking down error and speed up development
+  * `DEBUG_LOGGING` (`false`) - Set to `true` to log routine server heartbeats (`tick`, data reload summaries) and Nightscout Connect diagnostics. Warnings, errors and startup messages remain visible with debugging off. Restart Nightscout after changing it, and set it back to `false` or remove it when troubleshooting is complete.
   * `DE_NORMALIZE_DATES`(`true`) - The Nightscout REST API normalizes all entered dates to UTC zone. Some Nightscout clients have broken date deserialization logic and expect to received back dates in zoned formats. Setting this variable to `true` causes the REST API to serialize dates sent to Nightscout in zoned format back to zoned format when served to clients over REST.
 
 ### Predefined values for your browser settings (optional)
@@ -331,6 +332,7 @@ autonomy for your data:
   * `EDIT_MODE` (`on`) - possible values `on` or `off`. Enables the icon allowing for editing of treatments in the main view.
 
 ### Predefined values for your server settings (optional)
+  * `TRUST_PROXY` (empty) - Which proxies in front of Nightscout to believe when working out a client's address and whether a request arrived over https. Empty keeps the behaviour of every earlier release: forwarded headers (`X-Forwarded-For`, `X-Forwarded-Proto` and similar) are believed from any peer. Set `false` to ignore all forwarded metadata (direct connections only), a whole number of proxy hops (for example `1` for one nginx/Apache/Caddy/Traefik/Heroku router in front, `2` with Cloudflare in front of that) to trust that many proxies, `true` to trust every hop, or a comma-separated list of trusted proxy IP addresses/CIDRs for restricted trust. While it is empty, the client address comes from headers any caller can set, so the failed-login delay (`AUTH_FAIL_DELAY`) does not protect against guessing, and Nightscout logs a `SECURITY:` warning at startup. Behind a TLS-terminating proxy, `false` (or a list that does not contain the proxy) causes an https redirect loop; remove the setting to undo any value.
   * `INSECURE_USE_HTTP` (`false`) - Redirect unsafe http traffic to https. Possible values `false`, or `true`. Your site redirects to `https` by default. If you don't want that from Nightscout, but want to implement that with a Nginx or Apache proxy, set `INSECURE_USE_HTTP` to `true`. Note: This will allow (unsafe) http traffic to your Nightscout instance and is not recommended.
   * `SECURE_HSTS_HEADER` (`true`) - Add HTTP Strict Transport Security (HSTS) header. Possible values `false`, or `true`.
   * `SECURE_HSTS_HEADER_INCLUDESUBDOMAINS` (`false`) - includeSubdomains options for HSTS. Possible values `false`, or `true`.

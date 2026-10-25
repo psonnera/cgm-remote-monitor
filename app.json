@@ -2,6 +2,16 @@
   "name": "CGM Remote Monitor",
   "repository": "https://github.com/nightscout/cgm-remote-monitor",
   "env": {
+    "DEBUG_LOGGING": {
+      "description": "Log routine server and Nightscout Connect diagnostics for troubleshooting. Warnings and errors remain visible when false. Disable after troubleshooting.",
+      "value": "false",
+      "required": false
+    },
+    "TRUST_PROXY": {
+      "description": "Which proxies to believe for the client address and https detection. Leave empty for the previous behaviour (forwarded headers believed from any peer). On Heroku, 1 trusts the router and keys the failed-login delay on the real client; false means direct connections only; or a comma-separated list of proxy IPs/CIDRs.",
+      "value": "",
+      "required": false
+    },
     "MONGODB_URI": {
       "description": "The MongoDB Connection String to connect to your MongoDB cluster. If you don't have this from MongoDB Atlas, please re-read installation instructions at http://nightscout.github.io/nightscout/new_user/ before continuing",
       "value": "",
